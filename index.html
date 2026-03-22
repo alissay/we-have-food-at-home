@@ -29,7 +29,7 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 .hstat-l{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 
 /* CUISINE TABS */
-.cuisine-nav{background:var(--ink);padding:0 48px;border-bottom:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none;display:flex;gap:0;}
+.cuisine-nav{background:var(--ink);padding:0 48px;border-bottom:1px solid rgba(255,255,255,.08);scrollbar-width:none;display:flex;gap:0;position:relative;z-index:150;flex-wrap:wrap;}
 .cuisine-nav::-webkit-scrollbar{display:none;}
 .ctab{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;padding:16px 24px 14px;border:none;background:none;color:rgba(250,248,244,.4);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;margin-bottom:-1px;}
 .ctab:hover{color:rgba(250,248,244,.8);}
@@ -217,11 +217,36 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .cuisine-dropdown-wrap{position:relative;}
 .cuisine-dropdown-btn{white-space:nowrap;}
 .cuisine-dropdown-btn.has-active{color:#faf8f4!important;border-bottom-color:var(--gold)!important;}
-.cuisine-dropdown{display:none;position:absolute;top:100%;left:0;background:var(--ink);border:1px solid rgba(255,255,255,.1);min-width:160px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.cuisine-dropdown{display:none;position:absolute;top:100%;left:0;background:var(--ink);border:1px solid rgba(255,255,255,.1);min-width:160px;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4);}
 .cuisine-dropdown.open{display:block;}
 .cdrop-item{display:block;width:100%;text-align:left;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;padding:11px 18px;border:none;background:none;color:rgba(250,248,244,.6);cursor:pointer;transition:all .15s;border-bottom:1px solid rgba(255,255,255,.06);}
 .cdrop-item:last-child{border-bottom:none;}
 .cdrop-item:hover,.cdrop-item.active{background:rgba(255,255,255,.08);color:#faf8f4;}
+/* TOOLS DROPDOWN */
+.tools-dropdown-wrap{position:relative;}
+.tools-dropdown{display:none;position:absolute;top:100%;right:0;background:var(--ink);border:1px solid rgba(255,255,255,.1);min-width:200px;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.tools-dropdown.open{display:block;}
+.tdrop-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:'DM Mono',monospace;font-size:11px;padding:12px 18px;border:none;background:none;color:rgba(250,248,244,.6);cursor:pointer;transition:all .15s;border-bottom:1px solid rgba(255,255,255,.06);}
+.tdrop-item:last-child{border-bottom:none;}
+.tdrop-item:hover{background:rgba(255,255,255,.08);color:#faf8f4;}
+.tdrop-item .tdrop-icon{font-size:14px;width:20px;text-align:center;}
+.tdrop-item .tdrop-label{flex:1;}
+.tdrop-item .tdrop-desc{font-size:8px;color:rgba(250,248,244,.35);letter-spacing:.08em;text-transform:uppercase;}
+/* HELP PAGE */
+.help-ov{display:none;position:fixed;inset:0;background:rgba(26,23,20,.92);z-index:600;overflow-y:auto;padding:30px 20px;backdrop-filter:blur(5px);}
+.help-ov.open{display:flex;align-items:flex-start;justify-content:center;}
+.help-panel{background:var(--warm);width:100%;max-width:640px;animation:su .28s ease;}
+.help-header{background:var(--ink);padding:24px 32px;display:flex;justify-content:space-between;align-items:center;}
+.help-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--cream);}
+.help-close{background:none;border:none;color:rgba(250,248,244,.6);font-size:22px;cursor:pointer;}
+.help-body{padding:28px 32px;}
+.help-section{margin-bottom:28px;}
+.help-section-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.help-step{display:flex;gap:14px;margin-bottom:14px;font-size:12px;line-height:1.7;}
+.help-step-n{background:var(--ink);color:var(--cream);min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.help-step-text{flex:1;}
+.help-tip{background:rgba(90,122,92,.08);border-left:3px solid var(--sage);padding:12px 16px;font-size:11px;line-height:1.7;color:var(--ink);margin:8px 0;}
+.help-emoji{font-size:18px;margin-right:6px;}
 /* FAVORITES */
 .card-fav-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);background:transparent;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .18s;line-height:1;padding:0;flex-shrink:0;}
 .card-fav-btn:hover{border-color:var(--gold);background:rgba(232,184,74,.1);}
@@ -441,10 +466,6 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   <button class="ctab" data-c="breakfast" style="color:#c47a14">🍳 Breakfast</button>
   <button class="ctab" data-c="dessert" style="color:#c4478a">🍫 Desserts</button>
   <button class="ctab" data-c="history" style="color:#5a7a5c">📖 History</button>
-  <button class="ctab" onclick="openHousehold()" style="color:#c17b3a">👨‍👩‍👧 Household</button>
-  <button class="ctab" onclick="openBeforeWeShop()" style="color:var(--rust)">🛒 Before We Shop</button>
-  <button class="ctab pantry-stock-btn" onclick="openPantryStock()" title="View pantry stock">🫙 Pantry Stock</button>
-  <button class="ctab sync-nav-btn" onclick="openSync()" title="Sync across devices">☁ Sync</button>
   <div class="cuisine-dropdown-wrap">
     <button class="ctab cuisine-dropdown-btn" id="cuisineDropBtn">🌏 Cuisines ▾</button>
     <div class="cuisine-dropdown" id="cuisineDropMenu">
@@ -454,6 +475,16 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
       <button class="cdrop-item" data-c="chinese">🇨🇳 Chinese</button>
       <button class="cdrop-item" data-c="thai">🇹🇭 Thai</button>
       <button class="cdrop-item" data-c="japanese">🇯🇵 Japanese</button>
+    </div>
+  </div>
+  <div class="tools-dropdown-wrap" style="margin-left:auto;">
+    <button class="ctab" id="toolsDropBtn" style="color:rgba(250,248,244,.5)">⚙ Tools ▾</button>
+    <div class="tools-dropdown" id="toolsDropMenu">
+      <button class="tdrop-item" onclick="openBeforeWeShop();closeToolsDrop()"><span class="tdrop-icon">🛒</span><span><span class="tdrop-label">Before We Shop</span><br><span class="tdrop-desc">Quick fridge check</span></span></button>
+      <button class="tdrop-item" onclick="openPantryStock();closeToolsDrop()"><span class="tdrop-icon">🫙</span><span><span class="tdrop-label">Pantry Stock</span><br><span class="tdrop-desc">Track ingredient usage</span></span></button>
+      <button class="tdrop-item" onclick="openHousehold();closeToolsDrop()"><span class="tdrop-icon">👨‍👩‍👧</span><span><span class="tdrop-label">Household</span><br><span class="tdrop-desc">Profiles &amp; dietary needs</span></span></button>
+      <button class="tdrop-item" onclick="openHelp();closeToolsDrop()"><span class="tdrop-icon">❓</span><span><span class="tdrop-label">How to Use This App</span><br><span class="tdrop-desc">Quick guide for Mom</span></span></button>
+      <button class="tdrop-item" onclick="openSync();closeToolsDrop()"><span class="tdrop-icon">☁</span><span><span class="tdrop-label">Sync</span><br><span class="tdrop-desc">Export &amp; share data</span></span></button>
     </div>
   </div>
 </div>
@@ -568,6 +599,126 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 
 
 <!-- SYNC PANEL -->
+<!-- HELP PAGE (for Mom) -->
+<div class="help-ov" id="helpOv">
+  <div class="help-panel">
+    <div class="help-header">
+      <div class="help-title">How to Use This App</div>
+      <button class="help-close" onclick="closeHelp()">✕</button>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">👋</span> Welcome!</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:12px;">
+          This app has all of our family recipes — everything is high protein, no pork, no beef, and nothing spicy. You can browse recipes, plan the week, and make shopping lists. Everything saves automatically on this device.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">🔍</span> Finding Recipes</div>
+        <div class="help-step">
+          <span class="help-step-n">1</span>
+          <span class="help-step-text"><strong>Browse by tab</strong> — tap All, Favorites, Make It Now, Breakfast, Desserts, or Cuisines at the top.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">2</span>
+          <span class="help-step-text"><strong>Filter</strong> — use the Protein row (Chicken, Seafood, Turkey, etc.) and Time row (≤20 min, ≤30 min) to narrow down.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">3</span>
+          <span class="help-step-text"><strong>Health filters</strong> — the green Health row lets you filter by things like "Calcium-Rich" (good for your bones!) or "Batch Friendly."</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">4</span>
+          <span class="help-step-text"><strong>Search</strong> — type any ingredient or recipe name in the search box. It searches everything.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">5</span>
+          <span class="help-step-text"><strong>Surprise Me</strong> — the 🎲 button picks a random recipe for you!</span>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">⭐</span> Favorites &amp; Cart</div>
+        <div class="help-step">
+          <span class="help-step-n">☆</span>
+          <span class="help-step-text"><strong>Star button</strong> (top-right of each card) — saves to your Favorites tab. Tap again to remove.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">+</span>
+          <span class="help-step-text"><strong>Plus button</strong> (top-right of each card) — adds to your shopping cart. The cart icon in the bottom-right corner shows your count.</span>
+        </div>
+        <div class="help-tip">Your favorites are saved automatically and persist between visits!</div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">📅</span> Planning the Week</div>
+        <div class="help-step">
+          <span class="help-step-n">1</span>
+          <span class="help-step-text">Tap <strong>"📅 Plan My Week"</strong> in the filter bar.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">2</span>
+          <span class="help-step-text">Tap any empty slot (Mon Breakfast, Tue Dinner, etc.) to pick a recipe for that meal.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">3</span>
+          <span class="help-step-text">Weekday lunches (Mon–Fri) are marked as <strong>packed lunch</strong> slots — only packable recipes show up for those.</span>
+        </div>
+        <div class="help-step">
+          <span class="help-step-n">4</span>
+          <span class="help-step-text">When your week is planned, tap <strong>"Generate Shopping List"</strong> to see everything you need to buy, organized by category with price estimates.</span>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">🛒</span> Before We Shop</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:8px;">
+          Before heading to the store, open <strong>⚙ Tools → Before We Shop</strong>. Walk through the list and tap <strong>Full / Low / Out</strong> for each staple item. Then tap <strong>"Generate Restock Shopping List"</strong> — it copies a list to your clipboard that you can paste into Notes or text to whoever is going to the store.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">🏷️</span> Health Tags</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:8px;">
+          Recipe cards show colored tags like:
+        </p>
+        <div style="margin:8px 0 12px;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="htag htag-calcium">Calcium Rich</span>
+          <span class="htag htag-soft">Soft Food</span>
+          <span class="htag htag-anti-inflam">Anti-Inflammatory</span>
+          <span class="htag htag-treatment">Dad-Friendly</span>
+          <span class="htag htag-batch">Batch Friendly</span>
+          <span class="htag htag-post-workout">Post Workout</span>
+          <span class="htag htag-low-sodium">Low Sodium</span>
+        </div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);">
+          <strong>Calcium Rich</strong> = good for bones (you!). <strong>Dad-Friendly</strong> = soft, gentle, anti-inflammatory foods for during treatment. Use the Health filter row to show only recipes with a specific tag.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">✓</span> Made It</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);">
+          When you cook a recipe, open it and tap <strong>"✓ Made It"</strong>. This tracks what we've been cooking and helps the pantry stock tracker know what ingredients are getting used up. You can see your cooking history in the <strong>📖 History</strong> tab.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title"><span class="help-emoji">📱</span> On Your Phone</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted);">
+          This works on your phone too! Open the same website in Safari. To add it to your home screen: tap the <strong>Share</strong> button (square with arrow) → <strong>"Add to Home Screen."</strong> It will look and feel like a regular app.
+        </p>
+      </div>
+
+      <div style="text-align:center;padding:20px 0;border-top:1px solid var(--border);margin-top:8px;">
+        <button onclick="closeHelp()" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:12px 32px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;">Got It!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- HOUSEHOLD PANEL -->
 <div class="hh-ov" id="hhOv">
   <div class="hh-panel">
@@ -2138,9 +2289,31 @@ document.querySelectorAll('.cdrop-item').forEach(btn=>{
   });
 });
 
-// Close dropdown on outside click
-document.addEventListener('click',()=>{
+// Close dropdowns on outside click
+document.addEventListener('click',(e)=>{
+  if(!e.target.closest('.cuisine-dropdown-wrap')) document.getElementById('cuisineDropMenu').classList.remove('open');
+  if(!e.target.closest('.tools-dropdown-wrap')) document.getElementById('toolsDropMenu').classList.remove('open');
+});
+
+// Tools dropdown toggle
+document.getElementById('toolsDropBtn').addEventListener('click',(e)=>{
+  e.stopPropagation();
+  document.getElementById('toolsDropMenu').classList.toggle('open');
   document.getElementById('cuisineDropMenu').classList.remove('open');
+});
+function closeToolsDrop(){ document.getElementById('toolsDropMenu').classList.remove('open'); }
+
+// Help page
+function openHelp(){
+  document.getElementById('helpOv').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeHelp(){
+  document.getElementById('helpOv').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('helpOv').addEventListener('click',e=>{
+  if(e.target===document.getElementById('helpOv')) closeHelp();
 });
 
 // FILTER clicks (protein type)
@@ -2197,7 +2370,8 @@ document.getElementById('modalOv').addEventListener('click',e=>{
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    if(document.getElementById('hhOv').classList.contains('open')) closeHousehold();
+    if(document.getElementById('helpOv').classList.contains('open')) closeHelp();
+    else if(document.getElementById('hhOv').classList.contains('open')) closeHousehold();
     else if(document.getElementById('bwsOv').classList.contains('open')) closeBeforeWeShop();
     else closeModal();
   }
