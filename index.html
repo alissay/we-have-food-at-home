@@ -1387,16 +1387,48 @@ function generateShoppingList() {
   });
   const catOrder = ['🥩 Proteins', '🥚 Dairy, Eggs & Plant Protein', '🥬 Produce', '🧴 Sauces & Condiments', '🌾 Grains, Noodles & Flour', '🧂 Pantry & Spices'];
   
-  // Calculate costs
+  // Check pantry/inventory status for each ingredient
+  initBeforeWeShopStock();
+  function getIngStock(ingName) {
+    const n = ingName.toLowerCase();
+    // Check Before We Shop inventory first (more reliable — user manually sets)
+    for (const [key, val] of Object.entries(beforeWeShopStock)) {
+      if (n.includes(key) || key.includes(n.split(',')[0].trim())) {
+        if (val.status === 'full') return 'full';
+        if (val.status === 'low') return 'low';
+        if (val.status === 'out') return 'out';
+      }
+    }
+    // Fall back to pantry stock (usage-based tracking)
+    const sk = stockKey(ingName);
+    if (pantryStock[sk]) {
+      return pantryStock[sk].status || 'unknown';
+    }
+    return 'unknown';
+  }
+
+  // Tag each ingredient with stock status
+  Object.values(ingMap).forEach(ing => {
+    ing.stock = getIngStock(ing.display);
+  });
+
+  // Calculate costs — only count items we actually need to buy
   let totalLocal = 0, totalAmz = 0, totalCostco = 0;
+  let skippedLocal = 0, skippedCount = 0;
   const costcoItems = [];
   const ingList = Object.values(ingMap);
   ingList.forEach(ing => {
     const p = lookupPrice(ing.display);
+    if (ing.stock === 'full') {
+      // Already have it — track savings but don't add to totals
+      skippedLocal += p.local;
+      skippedCount++;
+      return;
+    }
     totalLocal += p.local;
     if (p.amz) totalAmz += p.amz;
     if (p.costco) { totalCostco += p.costco; }
-    else { totalCostco += p.local; } // use local price if not at Costco
+    else { totalCostco += p.local; }
     if (p.bulk && p.costco) costcoItems.push({name: ing.display, price: p.costco, unit: p.unit, localPrice: p.local});
   });
 
@@ -1454,12 +1486,17 @@ function generateShoppingList() {
       const costcoStr = p.costco ? `~$${p.costco.toFixed(2)}${p.unit}` : '—';
       const bulkBadge = p.bulk && p.costco ? `<span class="bulk-badge">✓ bulk</span>` : '';
       const usedIn = ing.displayQty || ing.qty;
-      catsHTML += `<div class="sl-ing-row">
-        <span><input type="checkbox" class="sl-ing-check" onchange="this.closest('.sl-ing-row').querySelector('.sl-ing-name').classList.toggle('checked',this.checked)"> <span class="sl-ing-name">${ing.display}${bulkBadge}</span></span>
+      const isFull = ing.stock === 'full';
+      const isLow = ing.stock === 'low';
+      const stockBadge = isFull ? '<span style="font-size:8px;background:var(--sage);color:white;padding:1px 5px;margin-left:4px;letter-spacing:.08em;text-transform:uppercase;">✓ have it</span>'
+        : isLow ? '<span style="font-size:8px;background:#e8a84a;color:var(--ink);padding:1px 5px;margin-left:4px;letter-spacing:.08em;text-transform:uppercase;">low — check</span>' : '';
+      const rowStyle = isFull ? 'opacity:.4;text-decoration:line-through;' : '';
+      catsHTML += `<div class="sl-ing-row" style="${rowStyle}">
+        <span><input type="checkbox" class="sl-ing-check" ${isFull?'checked':''} onchange="this.closest('.sl-ing-row').querySelector('.sl-ing-name').classList.toggle('checked',this.checked)"> <span class="sl-ing-name">${ing.display}${bulkBadge}${stockBadge}</span></span>
         <span class="sl-ing-qty">${usedIn}</span>
-        <span class="sl-price-local">${localStr}</span>
-        <span class="sl-price-amz">${amzStr}</span>
-        <span class="sl-price-costco">${costcoStr}</span>
+        <span class="sl-price-local">${isFull?'—':localStr}</span>
+        <span class="sl-price-amz">${isFull?'—':amzStr}</span>
+        <span class="sl-price-costco">${isFull?'—':costcoStr}</span>
       </div>`;
     });
   });
@@ -1470,6 +1507,10 @@ function generateShoppingList() {
     <div class="sl-recipes-used">
       <div class="sl-recipes-label">Shopping list for ${cartRecipes.length} recipe${cartRecipes.length!==1?'s':''} · ${totalCal} total cal · ${totalPro}g total protein</div>
       <div class="sl-recipe-tags">${recipeTagsHTML}</div>
+      ${skippedCount > 0 ? `<div style="margin-top:10px;padding:8px 12px;background:rgba(90,122,92,.08);border-left:3px solid var(--sage);font-size:11px;line-height:1.6;">
+        <strong style="color:var(--sage)">✓ ${skippedCount} ingredient${skippedCount!==1?'s':''} already in your pantry</strong> — crossed off and excluded from price totals, saving ~$${skippedLocal.toFixed(2)} at Fry's.
+        <span style="color:var(--muted);font-size:10px;display:block;margin-top:2px;">Based on your Before We Shop inventory. <a href="#" onclick="event.preventDefault();closeSL();openBeforeWeShop();" style="color:var(--sage)">Update inventory →</a></span>
+      </div>` : ''}
     </div>
     <div class="sl-budget">
       <div class="sl-budget-col">
