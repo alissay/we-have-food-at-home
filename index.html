@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>180 High-Protein Recipes by Cuisine</title>
+<title>We Have Food At Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -127,8 +127,8 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 .packable-pill{display:inline-block;font-size:7px;letter-spacing:.15em;text-transform:uppercase;background:var(--sage);color:white;padding:2px 6px;margin-left:6px;vertical-align:middle;}
 
 
-/* CART BUTTON ON CARDS */
-.card-add-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--warm);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;z-index:2;line-height:1;}
+/* CARD ACTION BUTTONS (top right) */
+.card-add-btn{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--warm);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;z-index:2;line-height:1;}
 .card-add-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 .card-add-btn.in-cart{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 
@@ -339,16 +339,95 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .sync-step code{background:rgba(26,23,20,.06);padding:1px 5px;font-family:'DM Mono',monospace;font-size:10px;}
 .sync-note{margin-top:10px;font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:8px;}
 
+/* HEALTH TAGS */
+.htag{display:inline-block;font-size:7px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;margin:1px 2px;border-radius:2px;vertical-align:middle;line-height:1.4;}
+.htag-soft{background:rgba(90,122,92,.12);color:var(--sage);}
+.htag-anti-inflam{background:rgba(123,94,167,.12);color:#7B5EA7;}
+.htag-calcium{background:rgba(26,92,138,.12);color:var(--american);}
+.htag-low-sodium{background:rgba(74,123,140,.12);color:#4A7B8C;}
+.htag-post-workout{background:rgba(196,98,45,.12);color:var(--rust);}
+.htag-batch{background:rgba(232,184,74,.12);color:#b8942e;}
+.htag-treatment{background:rgba(90,122,92,.18);color:var(--sage);border:1px solid rgba(90,122,92,.25);}
+
+/* HEALTH FILTER ROW */
+.health-filter-bar{background:rgba(90,122,92,.06);border-bottom:1px solid var(--border);padding:10px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.hfbtn{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.hfbtn:hover{border-color:var(--ink);color:var(--ink);}
+.hfbtn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+
+/* CARD TAG ROW */
+.card-tags{padding:3px 22px 2px;display:flex;flex-wrap:wrap;gap:2px;}
+
+/* HOUSEHOLD PANEL */
+.hh-ov{display:none;position:fixed;inset:0;background:rgba(26,23,20,.75);z-index:500;backdrop-filter:blur(4px);}
+.hh-ov.open{display:flex;align-items:center;justify-content:center;padding:20px;}
+.hh-panel{background:var(--warm);width:100%;max-width:720px;max-height:90vh;overflow-y:auto;animation:su .25s ease;}
+.hh-header{padding:22px 28px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--warm);z-index:2;}
+.hh-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.hh-sub{font-size:10px;color:var(--muted);line-height:1.6;margin-top:3px;}
+.hh-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+.hh-body{padding:20px 28px 28px;}
+.hh-card{background:var(--card);border:1px solid var(--border);padding:18px 20px;margin-bottom:16px;}
+.hh-card-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:4px;}
+.hh-card-role{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.hh-card-alert{background:rgba(196,98,45,.08);border-left:3px solid var(--rust);padding:8px 12px;font-size:11px;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.hh-card-stats{display:flex;gap:0;border:1px solid var(--border);}
+.hh-stat{flex:1;text-align:center;padding:10px 8px;border-right:1px solid var(--border);}
+.hh-stat:last-child{border-right:none;}
+.hh-stat-v{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.hh-stat-l{font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.hh-card-notes{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7;}
+.hh-card-supplements{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;}
+.hh-supp{font-size:8px;letter-spacing:.08em;padding:3px 8px;background:rgba(90,122,92,.08);color:var(--sage);border:1px solid rgba(90,122,92,.15);}
+.ctab[data-c="household"].active{border-bottom-color:#c17b3a;color:#c17b3a!important;}
+
+/* BEFORE WE SHOP PANEL */
+.bws-ov{display:none;position:fixed;inset:0;background:rgba(26,23,20,.75);z-index:500;backdrop-filter:blur(4px);}
+.bws-ov.open{display:flex;align-items:flex-start;justify-content:flex-end;}
+.bws-panel{background:var(--warm);width:480px;max-width:100vw;height:100vh;overflow-y:auto;display:flex;flex-direction:column;animation:slideInRight .25s ease;}
+.bws-header{padding:22px 24px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:var(--warm);z-index:2;}
+.bws-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.bws-sub{font-size:10px;color:var(--muted);line-height:1.6;margin-top:3px;}
+.bws-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+.bws-body{padding:16px 24px;flex:1;}
+.bws-section{margin-bottom:20px;}
+.bws-section-title{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.bws-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);}
+.bws-item:last-child{border-bottom:none;}
+.bws-item-name{font-size:12px;flex:1;}
+.bws-status-btns{display:flex;border:1px solid var(--border);}
+.bws-sbtn{font-size:8px;padding:3px 8px;border:none;border-right:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s;}
+.bws-sbtn:last-child{border-right:none;}
+.bws-sbtn.active-full{background:var(--sage);color:white;}
+.bws-sbtn.active-low{background:#e8a84a;color:var(--ink);}
+.bws-sbtn.active-out{background:var(--rust);color:white;}
+.bws-restock-list{margin-top:16px;background:var(--card);border:1px solid var(--border);padding:16px;}
+.bws-restock-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:8px;}
+.bws-restock-item{font-size:11px;padding:4px 0;border-bottom:1px dashed var(--border);display:flex;justify-content:space-between;}
+.bws-restock-item:last-child{border-bottom:none;}
+.bws-restock-status{font-size:9px;text-transform:uppercase;letter-spacing:.1em;}
+.bws-restock-status.low{color:#e8a84a;}
+.bws-restock-status.out{color:var(--rust);}
+.bws-footer{padding:16px 24px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--warm);}
+.bws-generate-btn{width:100%;padding:14px;background:var(--ink);color:var(--cream);border:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;}
+.bws-generate-btn:hover{opacity:.85;}
+
+@media(max-width:640px){
+  .health-filter-bar{padding-left:20px;padding-right:20px;}
+  .hh-panel{max-width:100%;}
+  .bws-panel{width:100%;}
+}
+
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="hero-tag">180 Recipes · 6 Cuisines · High Protein · Low Calorie</div>
-  <h1>A World of<br><em>Flavor</em> Awaits</h1>
-  <p class="hero-sub">Italian · American · Mexican · Chinese · Thai · Japanese — No pork, no beef, never boring</p>
+  <div class="hero-tag">We Have Food at Home · High Protein · Budget Friendly</div>
+  <h1>We Have <em>Food</em><br>at Home</h1>
+  <p class="hero-sub">3 people · No pork, no beef · Sweet over spicy · Batch cook friendly — never boring</p>
   <div class="hero-stats">
-    <div class="hstat"><div class="hstat-n">180</div><div class="hstat-l">Recipes</div></div>
+    <div class="hstat"><div class="hstat-n">260</div><div class="hstat-l">Recipes</div></div>
     <div class="hstat"><div class="hstat-n">6</div><div class="hstat-l">Cuisines</div></div>
     <div class="hstat"><div class="hstat-n">25+g</div><div class="hstat-l">Avg Protein</div></div>
     <div class="hstat"><div class="hstat-n">&lt;420</div><div class="hstat-l">Avg Cal</div></div>
@@ -362,6 +441,8 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   <button class="ctab" data-c="breakfast" style="color:#c47a14">🍳 Breakfast</button>
   <button class="ctab" data-c="dessert" style="color:#c4478a">🍫 Desserts</button>
   <button class="ctab" data-c="history" style="color:#5a7a5c">📖 History</button>
+  <button class="ctab" onclick="openHousehold()" style="color:#c17b3a">👨‍👩‍👧 Household</button>
+  <button class="ctab" onclick="openBeforeWeShop()" style="color:var(--rust)">🛒 Before We Shop</button>
   <button class="ctab pantry-stock-btn" onclick="openPantryStock()" title="View pantry stock">🫙 Pantry Stock</button>
   <button class="ctab sync-nav-btn" onclick="openSync()" title="Sync across devices">☁ Sync</button>
   <div class="cuisine-dropdown-wrap">
@@ -392,7 +473,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   <button class="fbtn active" data-t="all">Any</button>
   <button class="fbtn" data-t="20">≤20 min</button>
   <button class="fbtn" data-t="30">≤30 min</button>
-  <input class="search-box" type="text" placeholder="Search all 275 recipes..." id="searchBox">
+  <input class="search-box" type="text" placeholder="Search all recipes..." id="searchBox">
   <button class="surprise-btn" onclick="surpriseMe()" title="Pick a random recipe for me">🎲 Surprise Me</button>
   <button class="plan-week-btn" onclick="openPlanner()">📅 Plan My Week</button>
 </div>
@@ -403,6 +484,17 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   <button class="pfbtn" data-pf="meals">Meals</button>
   <button class="pfbtn" data-pf="breakfast">Breakfast</button>
   <button class="pfbtn" data-pf="baked">Baked &amp; Snacks</button>
+</div>
+<div class="health-filter-bar" id="healthFilterBar">
+  <span class="fl">Health</span>
+  <button class="hfbtn active" data-h="all">All</button>
+  <button class="hfbtn" data-h="treatment">Dad-Friendly</button>
+  <button class="hfbtn" data-h="soft">Soft Foods</button>
+  <button class="hfbtn" data-h="anti-inflam">Anti-Inflammatory</button>
+  <button class="hfbtn" data-h="calcium">Calcium-Rich</button>
+  <button class="hfbtn" data-h="low-sodium">Low Sodium</button>
+  <button class="hfbtn" data-h="post-workout">Post-Workout</button>
+  <button class="hfbtn" data-h="batch">Batch Friendly</button>
 </div>
 <div class="grid-wrap">
   <div class="grid-head">
@@ -476,6 +568,38 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 
 
 <!-- SYNC PANEL -->
+<!-- HOUSEHOLD PANEL -->
+<div class="hh-ov" id="hhOv">
+  <div class="hh-panel">
+    <div class="hh-header">
+      <div>
+        <div class="hh-title">👨‍👩‍👧 Our Household</div>
+        <div class="hh-sub">3 adults · Scottsdale, AZ 85258 · No pork, no beef, not spicy</div>
+      </div>
+      <button class="hh-close" onclick="closeHousehold()">✕</button>
+    </div>
+    <div class="hh-body" id="hhBody"></div>
+  </div>
+</div>
+
+<!-- BEFORE WE SHOP PANEL -->
+<div class="bws-ov" id="bwsOv">
+  <div class="bws-panel">
+    <div class="bws-header">
+      <div>
+        <div class="bws-title">🛒 Before We Shop</div>
+        <div class="bws-sub">Quick fridge & pantry check — tap to update status before heading to the store.</div>
+      </div>
+      <button class="bws-close" onclick="closeBeforeWeShop()">✕</button>
+    </div>
+    <div class="bws-body" id="bwsBody"></div>
+    <div class="bws-footer">
+      <div id="bwsRestockSummary" style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase;"></div>
+      <button class="bws-generate-btn" onclick="generateRestockList()">Generate Restock Shopping List</button>
+    </div>
+  </div>
+</div>
+
 <div class="sync-ov" id="syncOv">
   <div class="sync-panel">
     <div class="sync-header">
@@ -862,7 +986,25 @@ const R=[
 {id:244,c:'dessert',cat:'dairy',title:'Vanilla Bean Chia Seed Pudding',desc:'Chia seeds soaked in vanilla-infused milk and Greek yogurt overnight — silky, satisfying, and 18g protein. The easiest make-ahead dessert you will ever make.',cal:210,pro:18,car:22,fat:6,time:'5 min',i:[['Chia seeds','3 tbsp'],['Greek yogurt 0%','1/2 cup'],['Lactose-free milk','3/4 cup'],['Honey','1 tbsp'],['Vanilla extract','1 tsp'],['Toppings: berries, granola, honey','to serve']],s:['Whisk chia seeds, yogurt, milk, honey, vanilla together.','Stir vigorously to prevent clumping.','Refrigerate 20 min. Stir again to break up any clumps.','Refrigerate 4+ hours or overnight.','Serve topped with berries, a drizzle of honey, and a spoonful of granola.'],tip:'The second stir at 20 minutes is the key step — chia seeds clump into a dense ball without it, and you cannot fix that once they fully set.'},
 {id:245,c:'dessert',cat:'baked',title:'Almond Flour Olive Oil Cake',desc:'A classic Mediterranean olive oil cake — moist, fragrant, almost savory in its depth. Almond flour makes it naturally gluten-free with more protein than a standard cake.',cal:250,pro:9,car:20,fat:16,time:'45 min',i:[['Almond flour','2 cups'],['Good olive oil','1/4 cup'],['Eggs','3 large'],['Honey + granulated sugar','2 tbsp + 2 tbsp'],['Orange or lemon zest + juice','1 large orange'],['Baking powder + vanilla + pinch salt','1 tsp + 1 tsp + —']],s:['Whisk eggs, olive oil, honey, sugar, citrus zest, juice, and vanilla.','Fold in almond flour, baking powder, and salt.','Pour into greased 9-inch pan.','Bake 350F 30–35 min until golden and toothpick clean.','Cool completely. Dust with powdered sugar. Serve with a dollop of Greek yogurt.'],tip:'The olive oil flavor blooms as the cake cools — it tastes significantly better at room temperature or the next day than warm from the oven.'},
 
+// ===== TREATMENT-FRIENDLY + BUDGET RECIPES =====
+{id:246,c:'american',cat:'dairy',title:'Berry Anti-Inflammatory Smoothie',desc:'Frozen berries, Greek yogurt, honey, and a pinch of turmeric blended thick — soft, cold, high-protein, and loaded with antioxidants. Perfect when appetite is low.',cal:280,pro:26,car:38,fat:4,time:'5 min',i:[['Frozen mixed berries','1 cup'],['Greek yogurt 0%','3/4 cup'],['Honey','1 tbsp'],['Banana','1/2'],['Turmeric powder','1/4 tsp'],['Lactose-free milk','1/2 cup']],s:['Add all ingredients to blender.','Blend on high until completely smooth, about 60 seconds.','Add more milk if too thick. Taste for sweetness.','Pour and serve immediately or refrigerate up to 4 hours.'],tip:'The banana and honey mask the turmeric flavor completely — this tastes like a berry milkshake, not a health drink.'},
+{id:247,c:'american',cat:'dairy',title:'Cottage Cheese Power Bowl',desc:'Cottage cheese with honey, cinnamon, and whatever toppings you want — berries, granola, banana. 28g protein, zero cooking, done in 2 minutes.',cal:260,pro:28,car:24,fat:6,time:'2 min',i:[['Low-fat cottage cheese','1 cup'],['Honey','1 tbsp'],['Cinnamon','1/4 tsp'],['Fresh or frozen berries','1/2 cup'],['Banana, sliced','1/2'],['Granola (optional)','2 tbsp']],s:['Scoop cottage cheese into bowl.','Drizzle honey and sprinkle cinnamon.','Top with berries, banana, and granola if using.','That is it. Eat.'],tip:'Whip the cottage cheese in a blender for 30 seconds and it becomes mousse-like — completely different texture, same macros.'},
+{id:248,c:'american',cat:'poultry',title:'Chicken & White Bean Soup',desc:'A gentle, nourishing soup — tender chicken, white beans, carrots, and herbs in a clear broth. Soft, warm, batch-friendly, and easy on the stomach.',cal:320,pro:36,car:24,fat:8,time:'30 min',i:[['Chicken breast, diced','6 oz'],['Cannellini beans','1 can'],['Carrots, diced','2'],['Celery, diced','2 stalks'],['Chicken broth','4 cups'],['Garlic, thyme, bay leaf','2 cloves + 2 sprigs + 1']],s:['Sauté diced chicken until just white. Remove.','Sauté carrots, celery, garlic 4 min until softened.','Add broth, thyme, bay leaf. Bring to simmer.','Add beans and chicken. Simmer 15 min.','Remove bay leaf. Season gently with salt and pepper.'],tip:'This soup is intentionally mild — the comfort is in the warmth and simplicity, not aggressive seasoning.'},
+{id:249,c:'american',cat:'eggs',title:'Egg Drop Soup with Ground Turkey',desc:'Silky egg ribbons in a warm ginger-chicken broth with ground turkey — soft, easy to eat, surprisingly high protein, and costs almost nothing to make.',cal:240,pro:30,car:6,fat:10,time:'15 min',i:[['Ground turkey','4 oz'],['Eggs, beaten','3 large'],['Chicken broth','3 cups'],['Fresh ginger, grated','1 tsp'],['Green onions, sliced','2'],['Soy sauce + sesame oil','1 tbsp + 1/2 tsp']],s:['Brown turkey in pot, breaking into fine crumbles.','Add broth, ginger, soy sauce. Bring to gentle simmer.','Slowly pour beaten eggs in a thin stream while stirring.','Let eggs set for 30 seconds — do not stir aggressively.','Top with green onions and a drop of sesame oil.'],tip:'The thinner the stream of egg, the more delicate the ribbons. Pour from a measuring cup for control.'},
+{id:250,c:'american',cat:'poultry',title:'Crockpot Chicken Tortilla Soup',desc:'Dump chicken, broth, salsa, corn, and beans in the slow cooker and walk away. Shred and serve with cheese and tortilla strips. Feeds the house for two days.',cal:340,pro:38,car:28,fat:8,time:'15 min prep',i:[['Chicken breast','1 lb'],['Chicken broth','4 cups'],['Salsa','1 cup'],['Black beans, drained','1 can'],['Frozen corn','1 cup'],['Mexican cheese + tortilla strips','to top']],s:['Place chicken breast in slow cooker.','Add broth, salsa, beans, corn, garlic powder, cumin.','Cook on low 6–8 hours or high 3–4 hours.','Shred chicken with two forks directly in pot. Stir.','Serve topped with cheese, tortilla strips, and avocado.'],tip:'Salsa is the shortcut that replaces diced tomatoes, onion, garlic, cilantro, and lime in one ingredient.'},
+{id:251,c:'american',cat:'seafood',title:'Tuna & White Bean Salad',desc:'Canned tuna and canned beans tossed with lemon, olive oil, and herbs — no cooking, high protein, packable, and made entirely from pantry staples you already own.',cal:300,pro:34,car:22,fat:8,time:'5 min',i:[['Canned tuna in water','2 cans'],['Cannellini beans','1 can, drained'],['Lemon juice','2 tbsp'],['Olive oil','1 tsp'],['Red onion, finely diced','2 tbsp'],['Fresh parsley or dried Italian seasoning','2 tbsp or 1 tsp']],s:['Drain tuna well — squeeze out all water.','Toss with beans, lemon, olive oil, onion, herbs.','Season with salt and pepper.','Serve on its own, over greens, or in a wrap.'],tip:'This is better the next day after the beans absorb the lemon — make it the night before for Mom\'s packed lunch.'},
+{id:252,c:'japanese',cat:'poultry',title:'Turkey & Sweet Potato Congee',desc:'Ground turkey simmered low and slow with rice until it breaks into a silky porridge — topped with ginger, sesame, and green onion. The ultimate comfort food when energy is low.',cal:310,pro:28,car:36,fat:6,time:'40 min',i:[['Ground turkey','4 oz'],['Jasmine rice','1/3 cup'],['Chicken broth','4 cups'],['Sweet potato, small dice','1 medium'],['Fresh ginger, grated','1 tbsp'],['Green onions + sesame oil','2 + 1/2 tsp']],s:['Rinse rice. Add to pot with broth and ginger.','Bring to boil, reduce to low simmer. Stir occasionally.','After 15 min add sweet potato. Continue simmering.','In a separate pan, brown turkey with a splash of soy sauce.','After 30 min total, rice should be broken down into porridge. Top with turkey, green onions, sesame oil.'],tip:'Congee is meant to be stirred — the agitation breaks the rice grains and creates the silky texture. Do not set it and forget it.'},
+{id:253,c:'american',cat:'seafood',title:'Salmon & Broccoli Sheet Pan',desc:'Salmon fillets and broccoli florets roasted together on one pan with a honey-soy glaze. Omega-3s, calcium from the broccoli, anti-inflammatory, done in 20 minutes.',cal:380,pro:38,car:18,fat:16,time:'20 min',i:[['Salmon fillets','2 (5 oz each)'],['Broccoli florets','3 cups'],['Honey','1 tbsp'],['Soy sauce','1 tbsp'],['Garlic, minced','2 cloves'],['Sesame seeds','1 tsp']],s:['Toss broccoli with olive oil spray, salt, pepper. Spread on sheet pan.','Place salmon on pan. Mix honey, soy, garlic — brush onto salmon.','Roast at 425F for 15 min.','Salmon should flake easily, broccoli should be charred at edges.','Sprinkle sesame seeds. Serve immediately.'],tip:'Start the broccoli 5 minutes before adding the salmon if you want really crispy edges — salmon only needs 15 minutes.'},
+{id:254,c:'american',cat:'dairy',title:'Greek Yogurt Chicken Salad',desc:'Chicken salad made with Greek yogurt instead of mayo — grapes, celery, honey, and almonds. High protein, calcium-rich, no cooking if you use rotisserie chicken. Perfect for packing.',cal:290,pro:34,car:16,fat:10,time:'10 min',i:[['Cooked chicken breast, shredded','6 oz'],['Greek yogurt 0%','1/3 cup'],['Red grapes, halved','1/2 cup'],['Celery, diced','1 stalk'],['Honey + Dijon','1 tsp each'],['Sliced almonds','2 tbsp']],s:['Shred chicken or dice into small pieces.','Mix yogurt, honey, Dijon, salt, pepper.','Fold in chicken, grapes, celery, almonds.','Serve in lettuce wraps, on bread, or over greens.'],tip:'Leftover baked or rotisserie chicken makes this truly zero-effort. Make Sunday night, pack Mon–Wed lunches.'},
+{id:255,c:'chinese',cat:'poultry',title:'Ginger Chicken & Rice Soup',desc:'A Chinese-inspired healing soup — poached chicken in ginger broth with soft rice. Clean, warming, and exactly what you want when you do not feel well.',cal:300,pro:32,car:30,fat:6,time:'25 min',i:[['Chicken breast','6 oz'],['Jasmine rice','1/3 cup'],['Chicken broth','4 cups'],['Fresh ginger, sliced','6 coins'],['Garlic','2 cloves'],['Green onions + white pepper','2 + pinch']],s:['Bring broth to boil with ginger and garlic.','Add chicken breast whole. Reduce to simmer 15 min.','Remove chicken. Add rice to broth. Cook 8 min.','Shred chicken with forks. Return to pot.','Serve topped with green onions and white pepper.'],tip:'White pepper is traditional here and tastes completely different from black — it adds warmth without heat.'},
+{id:256,c:'mexican',cat:'turkey',title:'Turkey & Black Bean Burrito Bowls',desc:'Seasoned ground turkey, black beans, corn, rice, cheese, and salsa — a complete batch-cook meal that reheats perfectly for packed lunches all week.',cal:380,pro:36,car:38,fat:10,time:'25 min',i:[['Ground turkey','8 oz'],['Black beans, drained','1 can'],['Frozen corn','1 cup'],['Microwaveable rice','1 pouch'],['Salsa + Mexican cheese','1/2 cup each'],['Cumin + garlic powder','1 tsp + 1/2 tsp']],s:['Brown turkey with cumin and garlic powder.','Add beans and corn. Cook 5 min.','Microwave rice per package directions.','Build bowls: rice, turkey-bean mix, salsa, cheese.','Make 4 portions — refrigerate extras for the week.'],tip:'These bowls actually taste better reheated the next day — the seasoning soaks into the beans overnight.'},
+{id:257,c:'american',cat:'poultry',title:'Honey Teriyaki Chicken Thighs',desc:'Bone-in chicken thighs glazed in a simple honey-teriyaki sauce and baked until caramelized. Sweet, savory, and the most budget-friendly protein on the planet.',cal:360,pro:38,car:22,fat:12,time:'40 min',i:[['Chicken thighs, bone-in skinless','1.5 lbs'],['Soy sauce','3 tbsp'],['Honey','2 tbsp'],['Garlic, minced','3 cloves'],['Rice vinegar','1 tbsp'],['Sesame seeds + green onion','to garnish']],s:['Mix soy sauce, honey, garlic, rice vinegar.','Pour over chicken thighs in baking dish. Marinate 10 min (or longer if time).','Bake at 400F for 35 min, basting with sauce halfway through.','Broil 2 min at the end for caramelized edges.','Garnish with sesame seeds and sliced green onion.'],tip:'Bone-in thighs cost half what breast does and stay juicier — the bone conducts heat and bastes the meat from inside.'},
+{id:258,c:'italian',cat:'poultry',title:'Chicken & Orzo Soup',desc:'A light, brothy Italian soup with tender chicken, orzo pasta, spinach, and lemon — soothing, easy to eat, and ready in 25 minutes.',cal:310,pro:34,car:28,fat:6,time:'25 min',i:[['Chicken breast, diced','6 oz'],['Orzo pasta','1/2 cup'],['Baby spinach','2 cups'],['Chicken broth','4 cups'],['Lemon juice','2 tbsp'],['Garlic + dried oregano','2 cloves + 1/2 tsp']],s:['Sauté chicken and garlic until chicken is white.','Add broth, bring to boil. Add orzo.','Simmer 8 min until orzo is tender.','Stir in spinach until wilted (30 seconds).','Add lemon juice. Season and serve.'],tip:'Add the lemon at the very end — cooking it kills the brightness. You want that fresh citrus punch when you taste it.'},
+{id:259,c:'american',cat:'eggs',title:'Scrambled Egg & Avocado Bowl',desc:'Soft scrambled eggs with avocado, everything bagel seasoning, and a drizzle of honey. Simple, soft, high protein, done in 5 minutes.',cal:310,pro:22,car:14,fat:20,time:'5 min',i:[['Eggs','3 large'],['Avocado, sliced','1/2'],['Everything bagel seasoning','1 tsp'],['Honey','drizzle'],['Butter','1/2 tsp'],['Salt + pepper','to taste']],s:['Melt butter in nonstick pan over medium-low heat.','Add beaten eggs. Stir slowly with spatula, forming large soft curds.','Remove from heat while still slightly wet — carryover heat finishes them.','Plate eggs, fan avocado alongside.','Sprinkle everything seasoning, drizzle honey.'],tip:'Low heat and patience is the entire secret to soft scrambled eggs. High heat makes them rubbery in seconds.'},
+{id:260,c:'american',cat:'dairy',title:'Banana Peanut Butter Protein Smoothie',desc:'Frozen banana, peanut butter, Greek yogurt, and milk blended thick — 30g protein, tastes like a milkshake, and hides a handful of spinach if you want it.',cal:340,pro:30,car:36,fat:10,time:'5 min',i:[['Frozen banana','1 large'],['Greek yogurt 0%','3/4 cup'],['Peanut butter','1 tbsp'],['Lactose-free milk','1/2 cup'],['Honey','1 tsp'],['Baby spinach (optional)','handful']],s:['Add all ingredients to blender.','Blend until smooth, about 60 seconds.','Add more milk if too thick.','Pour and drink immediately.'],tip:'Freeze the banana the night before — frozen banana is what makes this thick like a milkshake instead of watery.'},
+
 ];
+
 
 // ===== PRICE DATABASE (Scottsdale 85258 area estimates) =====
 // Format: [localStore, amazonFresh, costco, unit, costcoBulk]
@@ -1219,7 +1361,259 @@ document.getElementById('slOv').addEventListener('click', e => {
 });
 
 // ===== STATE =====
-let activeCuisine='all', activeFilter='all', activeTimeFilter='all', activePantryFilter='all', searchTerm='', activeServes=1;
+let activeCuisine='all', activeFilter='all', activeTimeFilter='all', activePantryFilter='all', activeHealthFilter='all', searchTerm='', activeServes=1;
+
+// ===== HOUSEHOLD PROFILES =====
+const HOUSEHOLD = [
+  {
+    name: 'Alissa',
+    role: 'Works from home · Pool league Mon & Tue',
+    cal: 1500, pro: 130, schedule: 'IF 16:8 — eating window 12pm–8pm',
+    notes: 'No breakfast. Post-workout meals priority on gym days (Tue/Thu/Sat, 11am–12pm). Low decision fatigue — simple, repeatable meals.',
+    supplements: ['Creatine', 'Magnesium Glycinate'],
+    color: '#C17B3A',
+    alert: null
+  },
+  {
+    name: 'Mom',
+    role: 'Packed lunch Mon–Fri · Age ~72',
+    cal: 1550, pro: 100, schedule: 'Standard 3 meals/day',
+    notes: 'Borderline osteoporosis — calcium, vitamin D, vitamin K are priorities. Packed lunches must reheat well and not be messy. Leftovers are primary lunch source.',
+    supplements: ['Calcium Citrate', 'Vitamin D3', 'Vitamin K2'],
+    color: '#4A7B8C',
+    alert: null
+  },
+  {
+    name: 'Dad',
+    role: 'Active treatment · Age ~73',
+    cal: 1650, pro: 120, schedule: 'Small frequent meals may be easier during treatment',
+    notes: 'Lung cancer — stereotactic radiation (5-day sprint). History of strokes, aortic arch abnormality, hypertension. Soft, easy-to-eat foods preferred. Anti-inflammatory ingredients beneficial. Low sodium for blood pressure.',
+    supplements: [],
+    color: '#5A7A5C',
+    alert: '⚠️ Starting radiation treatment — appetite may decrease, fatigue likely. Prioritize soft foods, smoothies, soups, and small frequent meals. Anti-inflammatory ingredients (berries, salmon, leafy greens, turmeric, olive oil) recommended.'
+  }
+];
+
+// ===== HEALTH TAG DETECTION =====
+function getHealthTags(r) {
+  const tags = [];
+  const t = (r.title + ' ' + (r.desc || '')).toLowerCase();
+  const ings = (r.i || []).map(x => x[0].toLowerCase()).join(' ');
+  const all = t + ' ' + ings;
+
+  // SOFT FOODS — soups, smoothies, eggs, porridge, soft textures
+  if (/soup|broth|chowder|congee|porridge|smoothie|pudding|mousse|scrambled|egg drop|soft|silky|purée|puree|mashed|cream of/.test(all) && !/crispy|crusted|crunchy|panko|fried|grilled|seared/.test(t)) {
+    tags.push('soft');
+  }
+
+  // ANTI-INFLAMMATORY — berries, salmon, leafy greens, turmeric, olive oil, ginger, nuts
+  const antiCount = (all.match(/berr|salmon|spinach|kale|turmeric|olive oil|ginger|walnut|almond|broccoli|avocado|sweet potato|green tea|omega/g) || []).length;
+  if (antiCount >= 2) tags.push('anti-inflam');
+
+  // CALCIUM-RICH — yogurt, cheese, broccoli, salmon, leafy greens, beans
+  const calcCount = (ings.match(/yogurt|cheese|mozzarella|parmesan|cottage cheese|broccoli|salmon|kale|spinach|cannellini|white bean|almond/g) || []).length;
+  if (calcCount >= 1) tags.push('calcium');
+
+  // LOW SODIUM — no soy sauce, no canned soups, no olives, generally gentle
+  const highNa = /soy sauce|olives|kalamata|capers|anchov|fish sauce|miso|teriyaki|worcestershire/.test(ings);
+  if (!highNa && r.cal < 500) tags.push('low-sodium');
+
+  // POST-WORKOUT — high protein, ready fast
+  const mins = parseInt(r.time);
+  if (r.pro >= 30 && !isNaN(mins) && mins <= 20) tags.push('post-workout');
+
+  // BATCH FRIENDLY — makes large portions, reheats well
+  if (/batch|crockpot|slow cooker|casserole|bake$|chili|stew|soup|bolognese|burrito bowl|prep/.test(all) ||
+      (r.i && r.i.some(x => x[1] && (x[1].includes('1 lb') || x[1].includes('1 can') || x[1].includes('4 cups'))))) {
+    tags.push('batch');
+  }
+
+  // TREATMENT-FRIENDLY — combination: soft OR (anti-inflammatory AND not harsh)
+  const isGentle = !(/spicy|hot sauce|cayenne|red pepper flakes|chili flake|sriracha|wasabi|horseradish/.test(all));
+  if (isGentle && (tags.includes('soft') || (tags.includes('anti-inflam') && r.cal <= 400))) {
+    tags.push('treatment');
+  }
+
+  return tags;
+}
+
+function tagLabel(tag) {
+  const labels = {
+    'soft': 'Soft Food',
+    'anti-inflam': 'Anti-Inflammatory',
+    'calcium': 'Calcium Rich',
+    'low-sodium': 'Low Sodium',
+    'post-workout': 'Post Workout',
+    'batch': 'Batch Friendly',
+    'treatment': 'Dad-Friendly'
+  };
+  return labels[tag] || tag;
+}
+
+function passesHealthFilter(r) {
+  if (activeHealthFilter === 'all') return true;
+  return getHealthTags(r).includes(activeHealthFilter);
+}
+
+// ===== HOUSEHOLD PANEL =====
+function openHousehold() {
+  const body = document.getElementById('hhBody');
+  body.innerHTML = HOUSEHOLD.map(p => `
+    <div class="hh-card">
+      <div class="hh-card-name" style="color:${p.color}">${p.name}</div>
+      <div class="hh-card-role">${p.role}</div>
+      ${p.alert ? `<div class="hh-card-alert">${p.alert}</div>` : ''}
+      <div class="hh-card-stats">
+        <div class="hh-stat"><div class="hh-stat-v" style="color:${p.color}">${p.cal}</div><div class="hh-stat-l">Cal/Day</div></div>
+        <div class="hh-stat"><div class="hh-stat-v" style="color:${p.color}">${p.pro}g</div><div class="hh-stat-l">Protein/Day</div></div>
+        <div class="hh-stat"><div class="hh-stat-v" style="color:${p.color}">${Math.round(p.cal * 7)}</div><div class="hh-stat-l">Cal/Week</div></div>
+      </div>
+      <div class="hh-card-notes">${p.notes}</div>
+      <div class="hh-card-notes" style="font-style:italic;margin-top:4px">${p.schedule}</div>
+      ${p.supplements.length ? `<div class="hh-card-supplements">${p.supplements.map(s => `<span class="hh-supp">${s}</span>`).join('')}</div>` : ''}
+    </div>
+  `).join('') + `
+    <div style="background:var(--card);border:1px solid var(--border);padding:16px 20px;margin-top:8px;">
+      <div style="font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Shared House Rules</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.8;">
+        No pork, no beef — all three<br>
+        No spicy food — all three<br>
+        Sweet flavor profiles preferred — honey, maple, teriyaki, citrus<br>
+        Sunday batch cook → Mon–Wed dinners + packed lunches<br>
+        Alissa can't cook Mon or Tue evenings (pool league)<br>
+        3-person portions + 1 leftover serving (Mom's lunch)
+      </div>
+      <div style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:12px;padding-top:8px;border-top:1px solid var(--border);">Stores</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.8;margin-top:4px;">
+        Costco — 15255 N Hayden Rd (bulk proteins, pantry staples)<br>
+        Fry's — 8900 E Via Linda (weekly fill-ins)<br>
+        Sprouts — 9301 E Shea Blvd (fresh produce, sales)<br>
+        ALDI — (budget staples, eggs, dairy, frozen veg)<br>
+        Amazon Fresh — (heavy/bulky items, delivery)
+      </div>
+    </div>
+  `;
+  document.getElementById('hhOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHousehold() {
+  document.getElementById('hhOv').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('hhOv').addEventListener('click', e => {
+  if (e.target === document.getElementById('hhOv')) closeHousehold();
+});
+
+// ===== BEFORE WE SHOP =====
+const STAPLE_ITEMS = [
+  { cat: '🥩 Proteins', items: ['Just Bare chicken breast','Just Bare chicken thighs','Just Bare chicken tenders','Ground turkey','Salmon fillets','Shrimp','Eggs','Jennie-O turkey patties','Canned tuna'] },
+  { cat: '🥛 Dairy', items: ['Greek yogurt','Cottage cheese','Shredded Mexican cheese','Cheddar cheese','Parmesan','String cheese','Lactose-free milk'] },
+  { cat: '🥬 Produce', items: ['Avocados','Romaine lettuce','Sweet mini peppers','Carrots','Celery','Bananas','Lemons','Limes','Fresh ginger','Garlic','Onions','Green onions'] },
+  { cat: '❄️ Frozen', items: ['Frozen corn','Frozen broccoli','Frozen mixed berries','Frozen sweet potato','Ling Ling potstickers','Frozen mixed vegetables'] },
+  { cat: '🥫 Pantry Staples', items: ['Chicken broth','Cream of Mushroom soup','San Marzano tomatoes','Diced tomatoes','Black beans','Cannellini beans','Garbanzo beans','Enchilada sauce','Salsa','Pumpkin puree'] },
+  { cat: '🧴 Sauces & Oils', items: ['Soy sauce','Honey','Dijon mustard','Ranch dressing','Balsamic vinegar','Olive oil','Sesame oil','Mae Ploy sweet chili sauce'] },
+  { cat: '🌾 Grains', items: ['Jasmine rice','Flour tortillas','Pasta','Rolled oats','Almond flour','Panko breadcrumbs'] }
+];
+
+let beforeWeShopStock = {};
+
+function initBeforeWeShopStock() {
+  if (Object.keys(beforeWeShopStock).length > 0) return;
+  const saved = localStorage.getItem('rcBeforeWeShop');
+  if (saved) { try { beforeWeShopStock = JSON.parse(saved); return; } catch(e){} }
+  STAPLE_ITEMS.forEach(cat => {
+    cat.items.forEach(item => {
+      beforeWeShopStock[item.toLowerCase()] = { name: item, status: 'full', cat: cat.cat };
+    });
+  });
+  saveBeforeWeShop();
+}
+
+function saveBeforeWeShop() {
+  try { localStorage.setItem('rcBeforeWeShop', JSON.stringify(beforeWeShopStock)); } catch(e){}
+}
+
+function openBeforeWeShop() {
+  initBeforeWeShopStock();
+  renderBeforeWeShop();
+  document.getElementById('bwsOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBeforeWeShop() {
+  document.getElementById('bwsOv').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderBeforeWeShop() {
+  const body = document.getElementById('bwsBody');
+  let lowCount = 0, outCount = 0;
+
+  let html = STAPLE_ITEMS.map(cat => {
+    const itemsHtml = cat.items.map(item => {
+      const key = item.toLowerCase();
+      const stock = beforeWeShopStock[key] || { status: 'full' };
+      if (stock.status === 'low') lowCount++;
+      if (stock.status === 'out') outCount++;
+      return `<div class="bws-item">
+        <span class="bws-item-name">${item}</span>
+        <div class="bws-status-btns">
+          <button class="bws-sbtn ${stock.status==='full'?'active-full':''}" onclick="setBwsStatus('${key}','full')">Full</button>
+          <button class="bws-sbtn ${stock.status==='low'?'active-low':''}" onclick="setBwsStatus('${key}','low')">Low</button>
+          <button class="bws-sbtn ${stock.status==='out'?'active-out':''}" onclick="setBwsStatus('${key}','out')">Out</button>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="bws-section">
+      <div class="bws-section-title">${cat.cat}</div>
+      ${itemsHtml}
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+  document.getElementById('bwsRestockSummary').textContent = `${lowCount} low · ${outCount} out of stock`;
+}
+
+function setBwsStatus(key, status) {
+  if (beforeWeShopStock[key]) {
+    beforeWeShopStock[key].status = status;
+  }
+  saveBeforeWeShop();
+  renderBeforeWeShop();
+}
+
+function generateRestockList() {
+  const needed = Object.values(beforeWeShopStock).filter(x => x.status === 'low' || x.status === 'out');
+  if (!needed.length) { alert('Everything is stocked! Nothing to restock.'); return; }
+
+  // Build a simple shopping list view
+  const low = needed.filter(x => x.status === 'low');
+  const out = needed.filter(x => x.status === 'out');
+
+  let msg = '🛒 RESTOCK LIST\n\n';
+  if (out.length) {
+    msg += '🔴 OUT — Buy these:\n';
+    out.forEach(x => msg += `  • ${x.name}\n`);
+    msg += '\n';
+  }
+  if (low.length) {
+    msg += '🟡 LOW — Running low:\n';
+    low.forEach(x => msg += `  • ${x.name}\n`);
+  }
+
+  // Copy to clipboard
+  navigator.clipboard.writeText(msg).then(() => {
+    alert('Restock list copied to clipboard! Paste it into your Notes app or share it.');
+  }).catch(() => {
+    alert(msg);
+  });
+}
+
+document.getElementById('bwsOv').addEventListener('click', e => {
+  if (e.target === document.getElementById('bwsOv')) closeBeforeWeShop();
+});
 let modalCurrentId=null;
 
 // PERSISTENCE
@@ -1611,7 +2005,8 @@ function renderCards(){
     const cOk=activeCuisine==='all'||r.c===activeCuisine;
     const fOk=activeFilter==='all'||r.cat===activeFilter;
     const tOk=passesTimeFilter(r);
-    return cOk&&fOk&&tOk;
+    const hOk=passesHealthFilter(r);
+    return cOk&&fOk&&tOk&&hOk;
   });
   const countEl=document.getElementById('recipeCount');
   if(s) countEl.textContent=`Found ${filtered.length} recipes matching "${s}" across all tabs`;
@@ -1626,12 +2021,15 @@ function renderCards(){
     const cpp=costPerProtein(r);
     const madeTimes=madeCount(r.id);
     const isRecent=recentlyMade(r.id);
+    const htags=getHealthTags(r);
     return `<div class="card${isRecent?' card-made-recent':''}" onclick="openModal(${r.id})" style="cursor:pointer">
       <div class="card-stripe" style="background:${col}"></div>
-      <button class="card-add-btn ${inCart?'in-cart':''}" onclick="event.stopPropagation();toggleCart(${r.id})" title="${inCart?'Remove from cart':'Add to cart'}">${inCart?'✓':'+'}</button>
+      <div style="position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:2;">
+        <button class="card-fav-btn ${isFaved?'faved':''}" onclick="event.stopPropagation();toggleFav(${r.id},event)" title="${isFaved?'Remove from favorites':'Add to favorites'}" style="width:30px;height:30px;font-size:14px;">${isFaved?'★':'☆'}</button>
+        <button class="card-add-btn ${inCart?'in-cart':''}" onclick="event.stopPropagation();toggleCart(${r.id})" title="${inCart?'Remove from cart':'Add to cart'}" style="position:static;">${inCart?'✓':'+'}</button>
+      </div>
       <div class="card-body">
         <div class="card-meta">
-          <button class="card-fav-btn ${isFaved?'faved':''}" onclick="event.stopPropagation();toggleFav(${r.id},event)" title="${isFaved?'Remove from favorites':'Add to favorites'}">${isFaved?'★':'☆'}</button>
           <span class="card-cuisine" style="border-color:${col};color:${col}">${cLabel[r.c]}</span>
           <span class="card-cat" style="color:${catCol}">${r.cat}</span>
         </div>
@@ -1644,6 +2042,7 @@ function renderCards(){
           <div class="macro"><div class="macro-v" style="color:${col}">${r.fat}g</div><div class="macro-l">Fat</div></div>
         </div>
       </div>
+      ${htags.length?`<div class="card-tags">${htags.map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
       ${cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
       ${madeTimes>0?`<div class="card-made-badge">✓ made ${madeTimes}× ${isRecent?'· this week':''}</div>`:''}
       <div class="card-foot">
@@ -1764,6 +2163,16 @@ document.querySelectorAll('.fbtn[data-t]').forEach(btn=>{
   });
 });
 
+// HEALTH FILTER clicks
+document.querySelectorAll('.hfbtn[data-h]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.hfbtn[data-h]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeHealthFilter=btn.dataset.h;
+    renderCards();
+  });
+});
+
 // SEARCH
 document.getElementById('searchBox').addEventListener('input',e=>{
   searchTerm=e.target.value;
@@ -1786,7 +2195,13 @@ document.getElementById('modalOv').addEventListener('click',e=>{
   if(e.target===document.getElementById('modalOv'))closeModal();
 });
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('hhOv').classList.contains('open')) closeHousehold();
+    else if(document.getElementById('bwsOv').classList.contains('open')) closeBeforeWeShop();
+    else closeModal();
+  }
+});
 
 loadState();
 // Sync serves buttons after load
