@@ -523,7 +523,8 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
       <button class="cdrop-item" data-c="japanese">🇯🇵 Japanese</button>
     </div>
   </div>
-  <div class="tools-dropdown-wrap" style="margin-left:auto;">
+  <span id="syncIndicator" style="font-size:11px;color:rgba(250,248,244,.4);font-family:'DM Mono',monospace;margin-left:auto;margin-right:8px;"></span>
+  <div class="tools-dropdown-wrap">
     <button class="ctab" id="toolsDropBtn" style="color:rgba(250,248,244,.5)">⚙ Tools ▾</button>
     <div class="tools-dropdown" id="toolsDropMenu">
       <button class="tdrop-item" onclick="openBeforeWeShop();closeToolsDrop()"><span class="tdrop-icon">🛒</span><span><span class="tdrop-label">Before We Shop</span><br><span class="tdrop-desc">Quick fridge check</span></span></button>
@@ -3268,6 +3269,163 @@ function resetWeekPlan(){
 // Close picker on backdrop click
 document.getElementById('pickerOv').addEventListener('click',e=>{if(e.target===document.getElementById('pickerOv'))closePicker();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('pickerOv').classList.contains('open'))closePicker();});
+
+// ============================================================
+// CLOUD SYNC — auto-syncs state across devices via /api/state
+// ============================================================
+let syncInProgress = false;
+let lastSyncTime = 0;
+let syncDirty = false; // true when local changes need pushing
+
+// Mark state as dirty whenever saveState is called
+const _origSaveState = saveState;
+saveState = function() {
+  _origSaveState();
+  syncDirty = true;
+};
+
+function getLocalStateForSync() {
+  return {
+    favorites: [...favorites],
+    history: cookedHistory,
+    weekPlan: weekPlan,
+    weekPlanUpdated: parseInt(localStorage.getItem('rcWeekPlanUpdated')) || 0,
+    serves: activeServes,
+    pantryStock: pantryStock,
+    beforeWeShopStock: beforeWeShopStock
+  };
+}
+
+function applyServerState(state) {
+  if (!state) return;
+  // Favorites: union
+  if (state.favorites) {
+    state.favorites.forEach(id => favorites.add(id));
+  }
+  // History: merge + dedupe
+  if (state.history) {
+    const existing = new Set(cookedHistory.map(h => `${h.id}_${h.timestamp}`));
+    state.history.forEach(h => {
+      const key = `${h.id}_${h.timestamp}`;
+      if (!existing.has(key)) {
+        cookedHistory.push(h);
+        existing.add(key);
+      }
+    });
+    cookedHistory.sort((a, b) => b.timestamp - a.timestamp);
+  }
+  // WeekPlan: take server if newer
+  const localPlanTs = parseInt(localStorage.getItem('rcWeekPlanUpdated')) || 0;
+  if (state.weekPlanUpdated && state.weekPlanUpdated > localPlanTs) {
+    if (state.weekPlan && Array.isArray(state.weekPlan) && state.weekPlan.length === 7) {
+      weekPlan = state.weekPlan;
+    }
+    if (state.serves) activeServes = state.serves;
+    localStorage.setItem('rcWeekPlanUpdated', state.weekPlanUpdated);
+  }
+  // PantryStock: merge worst-status-wins
+  if (state.pantryStock) {
+    const statusRank = { out: 0, low: 1, full: 2 };
+    for (const [key, val] of Object.entries(state.pantryStock)) {
+      if (!pantryStock[key]) {
+        pantryStock[key] = val;
+      } else {
+        const localRank = statusRank[pantryStock[key].status] ?? 2;
+        const serverRank = statusRank[val.status] ?? 2;
+        if (serverRank < localRank) pantryStock[key].status = val.status;
+        if ((val.usedCount || 0) > (pantryStock[key].usedCount || 0)) {
+          pantryStock[key].usedCount = val.usedCount;
+        }
+      }
+    }
+  }
+  // BeforeWeShopStock: merge worst-status-wins
+  if (state.beforeWeShopStock) {
+    initBeforeWeShopStock();
+    const statusRank = { out: 0, low: 1, full: 2 };
+    for (const [key, val] of Object.entries(state.beforeWeShopStock)) {
+      if (!beforeWeShopStock[key]) {
+        beforeWeShopStock[key] = val;
+      } else {
+        const localRank = statusRank[beforeWeShopStock[key].status] ?? 2;
+        const serverRank = statusRank[val.status] ?? 2;
+        if (serverRank < localRank) beforeWeShopStock[key].status = val.status;
+      }
+    }
+    saveBeforeWeShop();
+  }
+  // Save merged state locally
+  _origSaveState();
+}
+
+async function syncToCloud() {
+  if (syncInProgress) return;
+  syncInProgress = true;
+  const indicator = document.getElementById('syncIndicator');
+  try {
+    if (indicator) indicator.textContent = '☁ syncing...';
+    const localState = getLocalStateForSync();
+    localState.weekPlanUpdated = Date.now();
+    localStorage.setItem('rcWeekPlanUpdated', localState.weekPlanUpdated);
+
+    const resp = await fetch('/api/state', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(localState)
+    });
+    if (!resp.ok) throw new Error('Sync PUT failed');
+    const { state: merged } = await resp.json();
+    if (merged) applyServerState(merged);
+    syncDirty = false;
+    lastSyncTime = Date.now();
+    if (indicator) indicator.textContent = '☁ synced';
+    setTimeout(() => { if (indicator) indicator.textContent = ''; }, 3000);
+    renderCards();
+  } catch (e) {
+    console.warn('Sync failed:', e);
+    if (indicator) indicator.textContent = '☁ offline';
+    setTimeout(() => { if (indicator) indicator.textContent = ''; }, 5000);
+  } finally {
+    syncInProgress = false;
+  }
+}
+
+async function pullFromCloud() {
+  if (syncInProgress) return;
+  syncInProgress = true;
+  try {
+    const resp = await fetch('/api/state');
+    if (!resp.ok) throw new Error('Sync GET failed');
+    const { empty, state } = await resp.json();
+    if (!empty && state) {
+      const beforeFavCount = favorites.size;
+      applyServerState(state);
+      if (favorites.size !== beforeFavCount) renderCards();
+    }
+    lastSyncTime = Date.now();
+  } catch (e) {
+    console.warn('Pull failed:', e);
+  } finally {
+    syncInProgress = false;
+  }
+}
+
+// Initial sync on load — pull server state, then push local
+setTimeout(async () => {
+  await pullFromCloud();
+  syncDirty = true;
+  await syncToCloud();
+}, 1000);
+
+// Poll every 30 seconds — push if dirty, pull if clean
+setInterval(async () => {
+  if (syncDirty) {
+    await syncToCloud();
+  } else {
+    await pullFromCloud();
+  }
+}, 30000);
+
 </script>
 </body>
 </html>

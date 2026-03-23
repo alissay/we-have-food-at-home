@@ -1,0 +1,24 @@
+{
+  "name": "we-have-food-at-home",
+  "version": "1.0.0",
+  "description": "A high-protein meal planning app built for 3 adults in Scottsdale, AZ.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alissay/we-have-food-at-home.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/alissay/we-have-food-at-home/issues"
+  },
+  "homepage": "https://github.com/alissay/we-have-food-at-home#readme",
+  "dependencies": {
+    "@vercel/blob": "^2.3.1"
+  }
+}
