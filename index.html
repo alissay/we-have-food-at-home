@@ -2434,6 +2434,7 @@ document.querySelectorAll('.ctab').forEach(btn=>{
     document.getElementById('cuisineDropBtn').classList.remove('has-active');
     btn.classList.add('active');
     activeCuisine=btn.dataset.c;
+    localStorage.setItem('rcActiveTab', activeCuisine);
     // Show/hide pantry sub-filter bar
     const psf=document.getElementById('pantrySubfilter');
     if(activeCuisine==='pantry'){ psf.classList.add('visible'); }
@@ -2463,6 +2464,7 @@ document.querySelectorAll('.cdrop-item').forEach(btn=>{
     document.getElementById('cuisineDropBtn').classList.add('has-active');
     document.getElementById('cuisineDropMenu').classList.remove('open');
     activeCuisine=btn.dataset.c;
+    localStorage.setItem('rcActiveTab', activeCuisine);
     renderCards();
   });
 });
@@ -3414,12 +3416,19 @@ async function pullFromCloud() {
     const resp = await fetch('/api/state');
     if (!resp.ok) throw new Error('Sync GET failed');
     const { empty, state } = await resp.json();
+    let changed = false;
     if (!empty && state) {
       const beforeFavCount = favorites.size;
+      const beforeHistCount = cookedHistory.length;
       applyServerState(state);
-      if (favorites.size !== beforeFavCount) renderCards();
+      changed = favorites.size !== beforeFavCount || cookedHistory.length !== beforeHistCount;
+      if (changed) renderCards();
     }
     lastSyncTime = Date.now();
+    // Always push back after pull so our local state merges into server
+    syncInProgress = false;
+    await syncToCloud();
+    return;
   } catch (e) {
     console.warn('Pull failed:', e);
   } finally {
