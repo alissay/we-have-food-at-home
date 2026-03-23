@@ -2556,6 +2556,7 @@ document.addEventListener('keydown',e=>{
 });
 
 loadState();
+renderCards();
 // Sync serves buttons after load
 document.querySelectorAll('.srv-btn').forEach(b=>{
   b.classList.toggle('active', parseInt(b.dataset.s)===activeServes);

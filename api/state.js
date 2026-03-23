@@ -118,6 +118,7 @@ module.exports = async function handler(req, res) {
         access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
+        allowOverwrite: true,
         token: TOKEN,
       });
 
