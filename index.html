@@ -3417,14 +3417,21 @@ setTimeout(async () => {
   await syncToCloud();
 }, 1000);
 
-// Poll every 30 seconds — push if dirty, pull if clean
-setInterval(async () => {
-  if (syncDirty) {
-    await syncToCloud();
-  } else {
-    await pullFromCloud();
+// Only push when dirty (user made a change) — debounced 5 seconds
+let syncTimeout = null;
+const _origSaveState2 = saveState;
+saveState = function() {
+  _origSaveState2();
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => syncToCloud(), 5000);
+};
+
+// Pull when tab becomes visible (user switches back to the app)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && Date.now() - lastSyncTime > 10000) {
+    pullFromCloud();
   }
-}, 30000);
+});
 
 </script>
 </body>
