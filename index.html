@@ -1882,6 +1882,7 @@ function saveState(){
     localStorage.setItem('rcServes', activeServes);
     localStorage.setItem('rcHistory', JSON.stringify(cookedHistory));
     localStorage.setItem('rcPantryStock', JSON.stringify(pantryStock));
+    localStorage.setItem('rcActiveTab', activeCuisine);
   }catch(e){}
 }
 function loadState(){
@@ -1896,6 +1897,21 @@ function loadState(){
     if(hist) cookedHistory=JSON.parse(hist)||[];
     const stock=localStorage.getItem('rcPantryStock');
     if(stock) pantryStock=JSON.parse(stock)||{};
+    // Restore active tab
+    const tab=localStorage.getItem('rcActiveTab');
+    if(tab) {
+      activeCuisine=tab;
+      document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.cdrop-item').forEach(b=>b.classList.remove('active'));
+      const tabBtn=document.querySelector(`.ctab[data-c="${tab}"]`);
+      const dropBtn=document.querySelector(`.cdrop-item[data-c="${tab}"]`);
+      if(tabBtn) tabBtn.classList.add('active');
+      else if(dropBtn) {
+        dropBtn.classList.add('active');
+        document.getElementById('cuisineDropBtn').classList.add('has-active');
+      }
+      if(tab==='pantry') document.getElementById('pantrySubfilter').classList.add('visible');
+    }
     // Init pantry stock from recipes if empty
     if(Object.keys(pantryStock).length===0) setTimeout(initPantryStock, 100);
   }catch(e){}

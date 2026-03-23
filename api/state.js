@@ -1,4 +1,4 @@
-const { put, head, list } = require('@vercel/blob');
+const { put, list, del } = require('@vercel/blob');
 
 const STATE_KEY = 'app-state.json';
 
@@ -93,7 +93,8 @@ module.exports = async function handler(req, res) {
       if (!blobs.length) {
         return res.status(200).json({ empty: true, state: null });
       }
-      const response = await fetch(blobs[0].url);
+      const readUrl = blobs[0].downloadUrl || blobs[0].url;
+      const response = await fetch(readUrl);
       const state = await response.json();
       return res.status(200).json({ empty: false, state });
     }
@@ -106,7 +107,8 @@ module.exports = async function handler(req, res) {
       let serverState = null;
       const { blobs } = await list({ prefix: STATE_KEY });
       if (blobs.length) {
-        const response = await fetch(blobs[0].url);
+        const readUrl = blobs[0].downloadUrl || blobs[0].url;
+        const response = await fetch(readUrl);
         serverState = await response.json();
       }
 
@@ -118,7 +120,7 @@ module.exports = async function handler(req, res) {
 
       // Write merged state
       await put(STATE_KEY, JSON.stringify(merged), {
-        access: 'public',
+        access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
       });
