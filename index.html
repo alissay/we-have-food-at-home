@@ -2164,8 +2164,13 @@ function hideHistoryTab(){
 }
 
 function clearHistory(){
-  if(!confirm('Clear all cooking history?')) return;
+  if(!confirm('Clear all cooking history and reset pantry stock to full?')) return;
   cookedHistory=[];
+  // Reset all pantry stock back to full
+  Object.keys(pantryStock).forEach(k => {
+    pantryStock[k].usedCount = 0;
+    pantryStock[k].status = 'full';
+  });
   saveState();
   renderHistoryTab();
 }
