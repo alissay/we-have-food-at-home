@@ -1,9 +1,21 @@
-const { put, list, del } = require('@vercel/blob');
+const { put, list } = require('@vercel/blob');
 
 const STATE_KEY = 'app-state.json';
+const TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 
 // Status priority: out > low > full (lower = worse)
 const STATUS_RANK = { out: 0, low: 1, full: 2 };
+
+async function readState() {
+  const { blobs } = await list({ prefix: STATE_KEY, token: TOKEN });
+  if (!blobs.length) return null;
+  // For private blobs, fetch with Authorization header
+  const response = await fetch(blobs[0].url, {
+    headers: { Authorization: `Bearer ${TOKEN}` }
+  });
+  if (!response.ok) return null;
+  return response.json();
+}
 
 function mergeState(server, client) {
   const merged = {};
@@ -53,7 +65,6 @@ function mergeState(server, client) {
       if (clientRank <= serverRank) {
         merged.pantryStock[key] = val;
       }
-      // Keep higher usedCount
       if (val.usedCount > (merged.pantryStock[key].usedCount || 0)) {
         merged.pantryStock[key].usedCount = val.usedCount;
       }
@@ -80,7 +91,6 @@ function mergeState(server, client) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -88,14 +98,8 @@ module.exports = async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Try to find existing state blob
-      const { blobs } = await list({ prefix: STATE_KEY });
-      if (!blobs.length) {
-        return res.status(200).json({ empty: true, state: null });
-      }
-      const readUrl = blobs[0].downloadUrl || blobs[0].url;
-      const response = await fetch(readUrl);
-      const state = await response.json();
+      const state = await readState();
+      if (!state) return res.status(200).json({ empty: true, state: null });
       return res.status(200).json({ empty: false, state });
     }
 
@@ -103,26 +107,18 @@ module.exports = async function handler(req, res) {
       const clientState = req.body;
       if (!clientState) return res.status(400).json({ error: 'No state provided' });
 
-      // Get current server state
-      let serverState = null;
-      const { blobs } = await list({ prefix: STATE_KEY });
-      if (blobs.length) {
-        const readUrl = blobs[0].downloadUrl || blobs[0].url;
-        const response = await fetch(readUrl);
-        serverState = await response.json();
-      }
+      const serverState = await readState();
 
-      // Merge or use client state if no server state
       const merged = serverState ? mergeState(serverState, clientState) : {
         ...clientState,
         lastSync: Date.now()
       };
 
-      // Write merged state
       await put(STATE_KEY, JSON.stringify(merged), {
         access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
+        token: TOKEN,
       });
 
       return res.status(200).json({ ok: true, state: merged });
