@@ -2299,10 +2299,8 @@ function renderCards(){
     const inCart=cart.has(r.id);
     const isFaved=favorites.has(r.id);
     const cpp=costPerProtein(r);
-    const madeTimes=madeCount(r.id);
-    const isRecent=recentlyMade(r.id);
     const htags=getHealthTags(r);
-    return `<div class="card${isRecent?' card-made-recent':''}" onclick="openModal(${r.id})" style="cursor:pointer">
+    return `<div class="card" onclick="openModal(${r.id})" style="cursor:pointer">
       <div class="card-stripe" style="background:${col}"></div>
       <div style="position:absolute;top:8px;right:8px;display:flex;gap:8px;z-index:2;">
         <button class="card-fav-btn ${isFaved?'faved':''}" onclick="event.stopPropagation();toggleFav(${r.id},event)" title="${isFaved?'Remove from favorites':'Add to favorites'}">${isFaved?'★':'☆'}</button>
@@ -2324,7 +2322,6 @@ function renderCards(){
       </div>
       ${htags.length?`<div class="card-tags">${htags.map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
       ${cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
-      ${madeTimes>0?`<div class="card-made-badge">✓ made ${madeTimes}× ${isRecent?'· this week':''}</div>`:''}
       <div class="card-foot">
         <span class="card-time">⏱ ${r.time}</span>
         <span class="card-ings">${r.i?r.i.slice(0,3).map(x=>x[0]).join(' · '):'—'}</span>
