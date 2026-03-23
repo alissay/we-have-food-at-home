@@ -56,7 +56,8 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 
 /* GRID */
 .grid-wrap{padding:40px 48px 80px;max-width:1400px;margin:0 auto;}
-.grid-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.grid-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:10px;}
+.sort-controls{display:flex;gap:6px;align-items:center;}
 .grid-count{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
 .cuisine-headline{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);}
 .recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
@@ -299,6 +300,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .modal-fav-btn:hover{color:var(--gold);}
 .modal-fav-btn.faved{color:var(--gold);}
 .ctab[data-c="new"].active{border-bottom-color:var(--rust);color:var(--rust)!important;}
+.ctab[data-c="canmake"].active{border-bottom-color:var(--sage);color:var(--sage)!important;}
 .ctab[data-c="favorites"].active{border-bottom-color:#e8b84a;color:#e8b84a!important;}
 /* COST PER PROTEIN — tiny and subtle */
 .card-cpp{display:block;font-size:10px;color:var(--dim);padding:3px 22px 0;font-family:'DM Mono',monospace;opacity:.7;}
@@ -418,6 +420,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .htag-post-workout{background:rgba(196,98,45,.12);color:var(--rust);}
 .htag-batch{background:rgba(232,184,74,.12);color:#b8942e;}
 .htag-treatment{background:rgba(90,122,92,.18);color:var(--sage);border:1px solid rgba(90,122,92,.25);}
+.htag-no-oven{background:rgba(196,71,138,.12);color:#c4478a;}
 
 /* HEALTH FILTER ROW */
 .health-filter-bar{background:rgba(90,122,92,.04);padding:8px 48px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
@@ -507,6 +510,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 <div class="cuisine-nav">
   <button class="ctab active" data-c="all">🌍 All</button>
   <button class="ctab" data-c="new" style="color:var(--rust)">🆕 New</button>
+  <button class="ctab" data-c="canmake" style="color:var(--sage)">🧊 Can Make</button>
   <button class="ctab" data-c="favorites" style="color:#e8b84a">⭐ Favorites</button>
   <button class="ctab" data-c="pantry" style="color:var(--gold)">🏠 Make It Now</button>
   <button class="ctab" data-c="breakfast" style="color:#c47a14">🍳 Breakfast</button>
@@ -531,6 +535,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
       <button class="tdrop-item" onclick="openPantryStock();closeToolsDrop()"><span class="tdrop-icon">🫙</span><span><span class="tdrop-label">Pantry Stock</span><br><span class="tdrop-desc">Track ingredient usage</span></span></button>
       <button class="tdrop-item" onclick="openHousehold();closeToolsDrop()"><span class="tdrop-icon">👨‍👩‍👧</span><span><span class="tdrop-label">Household</span><br><span class="tdrop-desc">Profiles &amp; dietary needs</span></span></button>
       <button class="tdrop-item" onclick="openHelp();closeToolsDrop()"><span class="tdrop-icon">❓</span><span><span class="tdrop-label">How to Use This App</span><br><span class="tdrop-desc">Quick guide for Mom</span></span></button>
+      <button class="tdrop-item" onclick="openWeekRecap();closeToolsDrop()"><span class="tdrop-icon">📊</span><span><span class="tdrop-label">Weekly Recap</span><br><span class="tdrop-desc">Cost &amp; nutrition summary</span></span></button>
       <button class="tdrop-item" onclick="openSync();closeToolsDrop()"><span class="tdrop-icon">☁</span><span><span class="tdrop-label">Sync</span><br><span class="tdrop-desc">Export &amp; share data</span></span></button>
     </div>
   </div>
@@ -566,6 +571,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
     <button class="hfbtn" data-h="low-sodium">Low Sodium</button>
     <button class="hfbtn" data-h="post-workout">Post-Workout</button>
     <button class="hfbtn" data-h="batch">Batch Friendly</button>
+    <button class="hfbtn" data-h="no-oven">No Oven</button>
   </div>
   <div class="pantry-subfilter" id="pantrySubfilter" style="display:none">
     <span class="fl">Show</span>
@@ -577,7 +583,14 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 </div>
 <div class="grid-wrap">
   <div class="grid-head">
-    <span class="grid-count" id="recipeCount">Showing 180 recipes</span>
+    <span class="grid-count" id="recipeCount">Showing 300 recipes</span>
+    <div class="sort-controls">
+      <span class="fl">Sort</span>
+      <button class="fbtn active" data-sort="default" onclick="setSort('default')">Default</button>
+      <button class="fbtn" data-sort="cheapest" onclick="setSort('cheapest')">Cheapest</button>
+      <button class="fbtn" data-sort="protein" onclick="setSort('protein')">Most Protein</button>
+      <button class="fbtn" data-sort="fastest" onclick="setSort('fastest')">Fastest</button>
+    </div>
   </div>
   <div class="recipe-grid" id="recipeGrid"></div>
 </div>
@@ -766,6 +779,20 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
         <button onclick="closeHelp()" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:12px 32px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;">Got It!</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- WEEKLY RECAP PANEL -->
+<div class="hh-ov" id="recapOv">
+  <div class="hh-panel" style="max-width:560px;">
+    <div class="hh-header">
+      <div>
+        <div class="hh-title">📊 Weekly Recap</div>
+        <div class="hh-sub">What you cooked this week, estimated cost, and nutrition.</div>
+      </div>
+      <button class="hh-close" onclick="closeWeekRecap()">✕</button>
+    </div>
+    <div class="hh-body" id="recapBody"></div>
   </div>
 </div>
 
@@ -1619,7 +1646,7 @@ document.getElementById('slOv').addEventListener('click', e => {
 const NEW_RECIPE_IDS = new Set([301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325]);
 
 // ===== STATE =====
-let activeCuisine='all', activeFilter='all', activeTimeFilter='all', activePantryFilter='all', activeHealthFilter='all', searchTerm='', activeServes=1;
+let activeCuisine='all', activeFilter='all', activeTimeFilter='all', activePantryFilter='all', activeHealthFilter='all', activeSort='default', searchTerm='', activeServes=1;
 
 // ===== HOUSEHOLD PROFILES =====
 const HOUSEHOLD = [
@@ -1692,6 +1719,12 @@ function getHealthTags(r) {
     tags.push('treatment');
   }
 
+  // NO OVEN — stovetop, microwave, blender, no-cook, or raw only (for Scottsdale summer)
+  const usesOven = /bake|roast|broil|oven|sheet pan|casserole|375|400|425|350|325/i.test(all);
+  if (!usesOven) {
+    tags.push('no-oven');
+  }
+
   return tags;
 }
 
@@ -1703,7 +1736,8 @@ function tagLabel(tag) {
     'low-sodium': 'Low Sodium',
     'post-workout': 'Post Workout',
     'batch': 'Batch Friendly',
-    'treatment': 'Dad-Friendly'
+    'treatment': 'Dad-Friendly',
+    'no-oven': 'No Oven'
   };
   return labels[tag] || tag;
 }
@@ -1762,6 +1796,88 @@ function closeHousehold() {
 
 document.getElementById('hhOv').addEventListener('click', e => {
   if (e.target === document.getElementById('hhOv')) closeHousehold();
+});
+
+// ===== WEEKLY RECAP =====
+function openWeekRecap() {
+  const now = Date.now();
+  const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+  const twoWeeksAgo = now - 14 * 24 * 60 * 60 * 1000;
+
+  const thisWeek = cookedHistory.filter(h => h.timestamp > weekAgo);
+  const lastWeek = cookedHistory.filter(h => h.timestamp > twoWeeksAgo && h.timestamp <= weekAgo);
+
+  const thisRecipes = thisWeek.map(h => R.find(r => r.id === h.id)).filter(Boolean);
+  const lastRecipes = lastWeek.map(h => R.find(r => r.id === h.id)).filter(Boolean);
+
+  const sum = (arr, fn) => arr.reduce((s, r) => s + fn(r), 0);
+  const thisCal = sum(thisRecipes, r => r.cal * 3); // 3 people
+  const thisPro = sum(thisRecipes, r => r.pro * 3);
+  const thisCost = sum(thisRecipes, r => costPerServing(r) * 3);
+  const lastCost = sum(lastRecipes, r => costPerServing(r) * 3);
+
+  const uniqueThis = new Set(thisWeek.map(h => h.id)).size;
+  const costDiff = lastCost > 0 ? thisCost - lastCost : 0;
+  const costDir = costDiff > 0 ? '↑' : costDiff < 0 ? '↓' : '—';
+  const costColor = costDiff <= 0 ? 'var(--sage)' : 'var(--rust)';
+
+  const body = document.getElementById('recapBody');
+  body.innerHTML = `
+    <div class="hh-card">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">This Week</div>
+      <div class="hh-card-stats">
+        <div class="hh-stat"><div class="hh-stat-v" style="color:var(--sage)">${thisWeek.length}</div><div class="hh-stat-l">Meals Cooked</div></div>
+        <div class="hh-stat"><div class="hh-stat-v" style="color:var(--sage)">${uniqueThis}</div><div class="hh-stat-l">Unique Recipes</div></div>
+        <div class="hh-stat"><div class="hh-stat-v" style="color:var(--sage)">~$${thisCost.toFixed(0)}</div><div class="hh-stat-l">Est. Grocery Cost</div></div>
+      </div>
+    </div>
+    <div class="hh-card">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">Nutrition (household total)</div>
+      <div class="hh-card-stats">
+        <div class="hh-stat"><div class="hh-stat-v">${thisCal.toLocaleString()}</div><div class="hh-stat-l">Total Cal</div></div>
+        <div class="hh-stat"><div class="hh-stat-v">${thisPro}g</div><div class="hh-stat-l">Total Protein</div></div>
+        <div class="hh-stat"><div class="hh-stat-v">${thisWeek.length > 0 ? Math.round(thisPro / thisWeek.length) : 0}g</div><div class="hh-stat-l">Avg Protein/Meal</div></div>
+      </div>
+    </div>
+    ${lastWeek.length > 0 ? `
+    <div class="hh-card">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">vs Last Week</div>
+      <div class="hh-card-stats">
+        <div class="hh-stat"><div class="hh-stat-v">${lastWeek.length}</div><div class="hh-stat-l">Meals Cooked</div></div>
+        <div class="hh-stat"><div class="hh-stat-v">~$${lastCost.toFixed(0)}</div><div class="hh-stat-l">Est. Cost</div></div>
+        <div class="hh-stat"><div class="hh-stat-v" style="color:${costColor}">${costDir} $${Math.abs(costDiff).toFixed(0)}</div><div class="hh-stat-l">Cost Change</div></div>
+      </div>
+    </div>` : ''}
+    ${thisRecipes.length > 0 ? `
+    <div class="hh-card">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">What You Made</div>
+      ${[...new Set(thisWeek.map(h => h.id))].map(id => {
+        const r = R.find(x => x.id === id);
+        if (!r) return '';
+        const count = thisWeek.filter(h => h.id === id).length;
+        return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px;">
+          <span>${r.title}</span>
+          <span style="color:var(--muted);white-space:nowrap">${count}× · ~$${(costPerServing(r)*3).toFixed(2)}</span>
+        </div>`;
+      }).join('')}
+    </div>` : `
+    <div class="hh-card" style="text-align:center;padding:40px 20px;color:var(--muted);">
+      <div style="font-size:28px;margin-bottom:8px;">🍳</div>
+      <div style="font-size:13px;line-height:1.7;">No meals logged this week yet.<br>Tap "✓ Made It" when you cook something!</div>
+    </div>`}
+  `;
+
+  document.getElementById('recapOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeWeekRecap() {
+  document.getElementById('recapOv').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('recapOv').addEventListener('click', e => {
+  if (e.target === document.getElementById('recapOv')) closeWeekRecap();
 });
 
 // ===== BEFORE WE SHOP =====
@@ -1947,6 +2063,52 @@ function costPerProtein(r){
   let cost=0;
   r.i.forEach(([name])=>{ const p=lookupPrice(name); cost+=p.local*0.15; });
   return (cost/r.pro).toFixed(2);
+}
+
+function costPerServing(r){
+  if(!r.i) return 999;
+  let cost=0;
+  r.i.forEach(([name])=>{ const p=lookupPrice(name); cost+=p.local*0.15; });
+  return cost;
+}
+
+function setSort(s){
+  activeSort=s;
+  document.querySelectorAll('.sort-controls .fbtn').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`.sort-controls .fbtn[data-sort="${s}"]`);
+  if(btn) btn.classList.add('active');
+  renderCards();
+}
+
+function sortRecipes(arr){
+  if(activeSort==='cheapest') return [...arr].sort((a,b)=>costPerServing(a)-costPerServing(b));
+  if(activeSort==='protein') return [...arr].sort((a,b)=>b.pro-a.pro);
+  if(activeSort==='fastest') return [...arr].sort((a,b)=>(parseInt(a.time)||99)-(parseInt(b.time)||99));
+  return arr;
+}
+
+// "What Can I Make?" — match recipes against current inventory
+function canMakeScore(r) {
+  initBeforeWeShopStock();
+  if(!r.i) return 0;
+  let have = 0, total = 0;
+  r.i.forEach(([name]) => {
+    if(!name || name==='—') return;
+    total++;
+    const n = name.toLowerCase();
+    // Check Before We Shop inventory
+    for (const [key, val] of Object.entries(beforeWeShopStock)) {
+      if ((n.includes(key) || key.includes(n.split(',')[0].trim())) && val.status !== 'out') {
+        have++;
+        return;
+      }
+    }
+    // Check common pantry staples that aren't tracked (salt, pepper, oil, water, spices)
+    if (/salt|pepper|water|olive oil spray|cooking spray|garlic powder|onion powder|seasoning/i.test(n)) {
+      have++;
+    }
+  });
+  return total > 0 ? have / total : 0;
 }
 
 // SURPRISE ME
@@ -2325,6 +2487,7 @@ function renderCards(){
              (r.i&&r.i.some(ing=>ing[0].toLowerCase().includes(s)));
     }
     if(activeCuisine==='new') return NEW_RECIPE_IDS.has(r.id);
+    if(activeCuisine==='canmake') return canMakeScore(r) >= 0.7;
     if(activeCuisine==='favorites') return favorites.has(r.id);
     if(activeCuisine==='pantry'){
       // Make It Now: show pantry recipes + optionally filter to breakfast
@@ -2339,9 +2502,14 @@ function renderCards(){
     const hOk=passesHealthFilter(r);
     return cOk&&fOk&&tOk&&hOk;
   });
+  // Sort
+  if(activeCuisine==='canmake') filtered.sort((a,b)=>canMakeScore(b)-canMakeScore(a));
+  else filtered=sortRecipes(filtered);
+
   const countEl=document.getElementById('recipeCount');
   if(s) countEl.textContent=`Found ${filtered.length} recipes matching "${s}" across all tabs`;
   else if(activeCuisine==='new') countEl.textContent=`${filtered.length} recently added recipe${filtered.length!==1?'s':''}`;
+  else if(activeCuisine==='canmake') countEl.textContent=`${filtered.length} recipe${filtered.length!==1?'s':''} you can make with what you have`;
   else if(activeCuisine==='favorites') countEl.textContent=`${filtered.length} favorited recipe${filtered.length!==1?'s':''}`;
   else countEl.textContent=`Showing ${filtered.length} of ${R.length} recipes`;
   if(!filtered.length){grid.innerHTML='<div class="no-res">No recipes match your filters. Try broadening your search.</div>';return;}
@@ -2373,7 +2541,9 @@ function renderCards(){
         </div>
       </div>
       ${htags.length?`<div class="card-tags">${htags.filter(t=>t!=='treatment').slice(0,3).map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
-      ${cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
+      ${activeCuisine==='canmake'?`<div class="card-cpp" style="color:var(--sage);opacity:1">${Math.round(canMakeScore(r)*100)}% ingredients on hand</div>`:''}
+      ${activeSort==='cheapest'?`<div class="card-cpp" style="opacity:1">~$${costPerServing(r).toFixed(2)}/serving est.</div>`:
+        cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
       <div class="card-foot">
         <span class="card-time">⏱ ${r.time}</span>
         <span class="card-ings">${r.i?r.i.slice(0,3).map(x=>x[0]).join(' · '):'—'}</span>
