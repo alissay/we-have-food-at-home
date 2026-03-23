@@ -46,7 +46,8 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 .ctab[data-c="dessert"].active{border-bottom-color:#c4478a;color:#c4478a!important;}
 
 /* FILTER BAR */
-.filter-bar{background:var(--warm);border-bottom:1px solid var(--border);padding:14px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;top:0;z-index:100;}
+.filters-sticky{position:sticky;top:0;z-index:100;background:var(--warm);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(26,23,20,.06);}
+.filter-bar{padding:12px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);}
 .fl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:4px;}
 .fbtn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;}
 .fbtn:hover,.fbtn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
@@ -198,7 +199,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .costco-item-price{font-size:12px;color:var(--mexican);}
 .costco-savings{font-size:12px;color:var(--sage);font-style:italic;}
 @media print{
-  .hero,.cuisine-nav,.filter-bar,.grid-wrap,.cart-fab,.cart-ov,.modal-ov,.sl-close-btn,.sl-actions,.sl-note{display:none!important;}
+  .hero,.cuisine-nav,.filters-sticky,.grid-wrap,.cart-fab,.cart-ov,.modal-ov,.sl-close-btn,.sl-actions,.sl-note{display:none!important;}
   .sl-ov{position:static!important;padding:0!important;background:white!important;display:block!important;}
   .sl-panel{max-width:100%!important;box-shadow:none!important;}
   .sl-top-bar{background:#1a1714!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -220,7 +221,8 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 
 /* PHONE */
 @media(max-width:640px){
-  .hero,.cuisine-nav,.filter-bar,.grid-wrap{padding-left:16px;padding-right:16px;}
+  .hero,.cuisine-nav,.grid-wrap{padding-left:16px;padding-right:16px;}
+  .filter-bar,.health-filter-bar,.pantry-subfilter{padding-left:16px;padding-right:16px;}
   .recipe-grid{grid-template-columns:1fr;}
   .modal-inner{padding:24px 20px;}
   .modal-title{font-size:22px;}
@@ -418,7 +420,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .htag-treatment{background:rgba(90,122,92,.18);color:var(--sage);border:1px solid rgba(90,122,92,.25);}
 
 /* HEALTH FILTER ROW */
-.health-filter-bar{background:rgba(90,122,92,.06);border-bottom:1px solid var(--border);padding:10px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.health-filter-bar{background:rgba(90,122,92,.04);padding:10px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .hfbtn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
 .hfbtn:hover{border-color:var(--ink);color:var(--ink);}
 .hfbtn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
@@ -533,43 +535,44 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   </div>
 </div>
 
-<div class="filter-bar">
-  <span class="fl">Protein</span>
-  <button class="fbtn active" data-f="all">All</button>
-  <button class="fbtn" data-f="seafood">Seafood</button>
-  <button class="fbtn" data-f="poultry">Chicken</button>
-  <button class="fbtn" data-f="turkey">Turkey</button>
-  <button class="fbtn" data-f="eggs">Eggs</button>
-  <button class="fbtn" data-f="dairy">Dairy</button>
-  <button class="fbtn" data-f="legumes">Legumes</button>
-  <button class="fbtn" data-f="baked">Baked Goods</button>
-  <div class="filter-divider"></div>
-  <span class="fl">Time</span>
-  <button class="fbtn active" data-t="all">Any</button>
-  <button class="fbtn" data-t="20">≤20 min</button>
-  <button class="fbtn" data-t="30">≤30 min</button>
-  <input class="search-box" type="text" placeholder="Search all recipes..." id="searchBox">
-  <button class="surprise-btn" onclick="surpriseMe()" title="Pick a random recipe for me">🎲 Surprise Me</button>
-  <button class="plan-week-btn" onclick="openPlanner()">📅 Plan My Week</button>
-</div>
-
-<div class="pantry-subfilter" id="pantrySubfilter" style="display:none">
-  <span class="fl">Show</span>
-  <button class="pfbtn active" data-pf="all">All</button>
-  <button class="pfbtn" data-pf="meals">Meals</button>
-  <button class="pfbtn" data-pf="breakfast">Breakfast</button>
-  <button class="pfbtn" data-pf="baked">Baked &amp; Snacks</button>
-</div>
-<div class="health-filter-bar" id="healthFilterBar">
-  <span class="fl">Health</span>
-  <button class="hfbtn active" data-h="all">All</button>
-  <button class="hfbtn" data-h="treatment">Dad-Friendly</button>
-  <button class="hfbtn" data-h="soft">Soft Foods</button>
-  <button class="hfbtn" data-h="anti-inflam">Anti-Inflammatory</button>
-  <button class="hfbtn" data-h="calcium">Calcium-Rich</button>
-  <button class="hfbtn" data-h="low-sodium">Low Sodium</button>
-  <button class="hfbtn" data-h="post-workout">Post-Workout</button>
-  <button class="hfbtn" data-h="batch">Batch Friendly</button>
+<div class="filters-sticky">
+  <div class="filter-bar">
+    <span class="fl">Protein</span>
+    <button class="fbtn active" data-f="all">All</button>
+    <button class="fbtn" data-f="seafood">Seafood</button>
+    <button class="fbtn" data-f="poultry">Chicken</button>
+    <button class="fbtn" data-f="turkey">Turkey</button>
+    <button class="fbtn" data-f="eggs">Eggs</button>
+    <button class="fbtn" data-f="dairy">Dairy</button>
+    <button class="fbtn" data-f="legumes">Legumes</button>
+    <button class="fbtn" data-f="baked">Baked Goods</button>
+    <div class="filter-divider"></div>
+    <span class="fl">Time</span>
+    <button class="fbtn active" data-t="all">Any</button>
+    <button class="fbtn" data-t="20">≤20 min</button>
+    <button class="fbtn" data-t="30">≤30 min</button>
+    <input class="search-box" type="text" placeholder="Search all recipes..." id="searchBox">
+    <button class="surprise-btn" onclick="surpriseMe()" title="Pick a random recipe for me">🎲 Surprise Me</button>
+    <button class="plan-week-btn" onclick="openPlanner()">📅 Plan My Week</button>
+  </div>
+  <div class="health-filter-bar" id="healthFilterBar">
+    <span class="fl">Health</span>
+    <button class="hfbtn active" data-h="all">All</button>
+    <button class="hfbtn" data-h="treatment">Dad-Friendly</button>
+    <button class="hfbtn" data-h="soft">Soft Foods</button>
+    <button class="hfbtn" data-h="anti-inflam">Anti-Inflammatory</button>
+    <button class="hfbtn" data-h="calcium">Calcium-Rich</button>
+    <button class="hfbtn" data-h="low-sodium">Low Sodium</button>
+    <button class="hfbtn" data-h="post-workout">Post-Workout</button>
+    <button class="hfbtn" data-h="batch">Batch Friendly</button>
+  </div>
+  <div class="pantry-subfilter" id="pantrySubfilter" style="display:none">
+    <span class="fl">Show</span>
+    <button class="pfbtn active" data-pf="all">All</button>
+    <button class="pfbtn" data-pf="meals">Meals</button>
+    <button class="pfbtn" data-pf="breakfast">Breakfast</button>
+    <button class="pfbtn" data-pf="baked">Baked &amp; Snacks</button>
+  </div>
 </div>
 <div class="grid-wrap">
   <div class="grid-head">
