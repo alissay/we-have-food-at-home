@@ -590,6 +590,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
       <button class="fbtn" data-sort="cheapest" onclick="setSort('cheapest')">Cheapest</button>
       <button class="fbtn" data-sort="protein" onclick="setSort('protein')">Most Protein</button>
       <button class="fbtn" data-sort="fastest" onclick="setSort('fastest')">Fastest</button>
+      <button class="fbtn" data-sort="protratio" onclick="setSort('protratio')">Best Protein/Cal</button>
     </div>
   </div>
   <div class="recipe-grid" id="recipeGrid"></div>
@@ -2080,10 +2081,13 @@ function setSort(s){
   renderCards();
 }
 
+function proteinRatio(r){ return r.cal > 0 ? (r.pro * 4 / r.cal) : 0; } // % of calories from protein
+
 function sortRecipes(arr){
   if(activeSort==='cheapest') return [...arr].sort((a,b)=>costPerServing(a)-costPerServing(b));
   if(activeSort==='protein') return [...arr].sort((a,b)=>b.pro-a.pro);
   if(activeSort==='fastest') return [...arr].sort((a,b)=>(parseInt(a.time)||99)-(parseInt(b.time)||99));
+  if(activeSort==='protratio') return [...arr].sort((a,b)=>proteinRatio(b)-proteinRatio(a));
   return arr;
 }
 
@@ -2543,6 +2547,7 @@ function renderCards(){
       ${htags.length?`<div class="card-tags">${htags.filter(t=>t!=='treatment').slice(0,3).map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
       ${activeCuisine==='canmake'?`<div class="card-cpp" style="color:var(--sage);opacity:1">${Math.round(canMakeScore(r)*100)}% ingredients on hand</div>`:''}
       ${activeSort==='cheapest'?`<div class="card-cpp" style="opacity:1">~$${costPerServing(r).toFixed(2)}/serving est.</div>`:
+        activeSort==='protratio'?`<div class="card-cpp" style="opacity:1;color:var(--sage)">${Math.round(proteinRatio(r)*100)}% calories from protein</div>`:
         cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
       <div class="card-foot">
         <span class="card-time">⏱ ${r.time}</span>
