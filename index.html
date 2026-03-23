@@ -1962,35 +1962,75 @@ function initPantryStock(){
 }
 
 // --- MARK RECIPE AS COOKED ---
+let lastMadeEntry = null; // for undo
+
 function markMade(id, skipConfirm){
   const r = R.find(x=>x.id===id);
   if(!r) return;
   if(!skipConfirm && recentlyMade(id)){
     if(!confirm(`You made "${r.title}" recently. Log it again?`)) return;
   }
-  cookedHistory.unshift({id, timestamp: Date.now()});
+  const entry = {id, timestamp: Date.now()};
+  cookedHistory.unshift(entry);
+  lastMadeEntry = entry;
   // Auto-deduct ingredients from pantry stock
   (r.i||[]).forEach(([name, qty]) => {
     if(!name||name==='—') return;
     const k = stockKey(name);
     if(!pantryStock[k]) return;
     pantryStock[k].usedCount++;
-    // Heuristic: after 3+ uses mark as low, after 6+ mark as out
     if(pantryStock[k].status==='full' && pantryStock[k].usedCount >= 3) pantryStock[k].status='low';
     if(pantryStock[k].usedCount >= 6) pantryStock[k].status='out';
   });
   saveState();
   renderCards();
-  // Flash feedback on modal button if open
+  // Show undo option on modal button if open
   if(modalCurrentId===id){
     const btn = document.getElementById('mMadeBtn');
     if(btn){
-      btn.textContent='✓ Logged!';
+      btn.textContent='✓ Logged! — tap to undo';
       btn.classList.add('just-made');
-      setTimeout(()=>{btn.textContent='✓ Made It';btn.classList.remove('just-made');},1800);
+      btn.onclick = function(){ undoMade(id); };
+      setTimeout(()=>{
+        btn.textContent='✓ Made It';
+        btn.classList.remove('just-made');
+        btn.onclick = function(){ markMadeFromModal(); };
+      }, 5000);
     }
   }
-  // If history tab is showing, refresh it
+  if(activeCuisine==='history') renderHistoryTab();
+}
+
+function undoMade(id){
+  const r = R.find(x=>x.id===id);
+  if(!r) return;
+  // Remove the most recent history entry for this recipe
+  const idx = cookedHistory.findIndex(h => h.id === id);
+  if(idx === -1) return;
+  cookedHistory.splice(idx, 1);
+  // Reverse pantry deductions
+  (r.i||[]).forEach(([name, qty]) => {
+    if(!name||name==='—') return;
+    const k = stockKey(name);
+    if(!pantryStock[k]) return;
+    if(pantryStock[k].usedCount > 0) pantryStock[k].usedCount--;
+    // Re-evaluate status
+    if(pantryStock[k].usedCount < 3) pantryStock[k].status='full';
+    else if(pantryStock[k].usedCount < 6) pantryStock[k].status='low';
+  });
+  lastMadeEntry = null;
+  saveState();
+  renderCards();
+  // Reset modal button
+  if(modalCurrentId===id){
+    const btn = document.getElementById('mMadeBtn');
+    if(btn){
+      btn.textContent='↩ Undone!';
+      btn.classList.remove('just-made');
+      btn.onclick = function(){ markMadeFromModal(); };
+      setTimeout(()=>{ btn.textContent='✓ Made It'; }, 1500);
+    }
+  }
   if(activeCuisine==='history') renderHistoryTab();
 }
 
@@ -2069,6 +2109,7 @@ function renderHistoryTab(){
         <div class="hi-meta">${cLabel[r.c]||r.c} · ${r.cal} cal · ${r.pro}g protein · Last made ${formatRelativeDate(entry.lastTs)}</div>
       </div>
       <div class="hi-count">${entry.count}×${recent?' 🟢':''}</div>
+      <button class="hi-made-btn" onclick="event.stopPropagation();undoMade(${r.id})" style="background:var(--muted);margin-right:4px;" title="Undo last">↩</button>
       <button class="hi-made-btn" onclick="event.stopPropagation();markMade(${r.id},true)">+ Made Again</button>
     </div>`;
   }).join('');
