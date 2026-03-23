@@ -86,7 +86,7 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 @keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .modal-accent{height:5px;}
 .modal-inner{padding:36px 40px;}
-.modal-close{position:absolute;top:12px;right:12px;background:var(--ink);color:var(--cream);border:none;width:44px;height:44px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-close{background:var(--ink);color:var(--cream);border:none;width:44px;height:44px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .modal-cuisine-badge{display:inline-block;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:6px 14px;border:1px solid;margin-bottom:10px;}
 .modal-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1.15;margin-bottom:10px;}
 .modal-desc{font-family:'Libre Baskerville',serif;font-style:italic;font-size:12px;color:var(--muted);line-height:1.85;margin-bottom:24px;}
@@ -293,7 +293,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .card-fav-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:var(--warm);font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .18s;line-height:1;padding:0;flex-shrink:0;}
 .card-fav-btn:hover{border-color:var(--gold);background:rgba(232,184,74,.1);}
 .card-fav-btn.faved{background:var(--gold);border-color:var(--gold);color:var(--ink);}
-.modal-fav-btn{position:absolute;top:12px;right:60px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--dim);transition:all .18s;padding:8px;}
+.modal-fav-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--dim);transition:all .18s;padding:8px;flex-shrink:0;}
 .modal-fav-btn:hover{color:var(--gold);}
 .modal-fav-btn.faved{color:var(--gold);}
 .ctab[data-c="new"].active{border-bottom-color:var(--rust);color:var(--rust)!important;}
@@ -310,7 +310,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .planner-reset-btn:hover{color:var(--cream);border-color:rgba(250,248,244,.4);}
 
 /* MADE IT BUTTON */
-.modal-made-btn{background:var(--sage);color:white;border:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;transition:all .18s;display:inline-block;margin-top:12px;}
+.modal-made-btn{background:var(--sage);color:white;border:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:all .18s;flex-shrink:0;white-space:nowrap;}
 .modal-made-btn:hover{opacity:.85;}
 .modal-made-btn.just-made{background:var(--ink);}
 .card-made-badge{font-size:7px;color:var(--sage);font-family:'DM Mono',monospace;letter-spacing:.08em;opacity:.8;padding:1px 22px 0;}
@@ -582,12 +582,14 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
   <div class="modal" style="position:relative">
     <div class="modal-accent" id="mAccent"></div>
     <div class="modal-inner">
-      <button class="modal-close" id="mClose">✕</button>
-      <button class="modal-fav-btn" id="mFavBtn" onclick="toggleFavFromModal()" title="Add to favorites">☆</button>
+      <div style="position:absolute;top:12px;right:12px;display:flex;gap:8px;align-items:center;z-index:2;">
+        <button class="modal-made-btn" id="mMadeBtn" onclick="markMadeFromModal()" title="Mark as cooked">✓ Made It</button>
+        <button class="modal-fav-btn" id="mFavBtn" onclick="toggleFavFromModal()" title="Add to favorites">☆</button>
+        <button class="modal-close" id="mClose">✕</button>
+      </div>
       <div class="modal-cuisine-badge" id="mBadge"></div>
       <div class="modal-title" id="mTitle"></div>
       <div class="modal-desc" id="mDesc"></div>
-      <button class="modal-made-btn" id="mMadeBtn" onclick="markMadeFromModal()" title="Mark as cooked">✓ Made It</button>
       <div class="modal-serve-row">
       <div class="modal-serve-label">Macros for</div>
       <div class="modal-serve-btns">
