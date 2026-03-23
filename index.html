@@ -46,9 +46,9 @@ body{background:var(--cream);font-family:'DM Mono',monospace;color:var(--ink);ov
 .ctab[data-c="dessert"].active{border-bottom-color:#c4478a;color:#c4478a!important;}
 
 /* FILTER BAR */
-.filters-sticky{position:sticky;top:0;z-index:100;background:var(--warm);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(26,23,20,.06);}
-.filter-bar{padding:12px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);}
-.fl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:4px;}
+.filters-sticky{position:sticky;top:0;z-index:100;background:var(--warm);box-shadow:0 2px 8px rgba(26,23,20,.08);}
+.filter-bar{padding:10px 48px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);}
+.fl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);margin-right:4px;font-weight:600;}
 .fbtn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;}
 .fbtn:hover,.fbtn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 .search-box{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;padding:10px 14px;border:1px solid var(--border);background:transparent;color:var(--ink);outline:none;width:200px;}
@@ -420,7 +420,7 @@ border:1px solid rgba(45,122,62,.2);padding:14px 16px;margin-bottom:20px;}
 .htag-treatment{background:rgba(90,122,92,.18);color:var(--sage);border:1px solid rgba(90,122,92,.25);}
 
 /* HEALTH FILTER ROW */
-.health-filter-bar{background:rgba(90,122,92,.04);padding:10px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.health-filter-bar{background:rgba(90,122,92,.04);padding:8px 48px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
 .hfbtn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
 .hfbtn:hover{border-color:var(--ink);color:var(--ink);}
 .hfbtn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
@@ -2355,7 +2355,7 @@ function renderCards(){
           <div class="macro"><div class="macro-v" style="color:${col}">${r.fat}g</div><div class="macro-l">Fat</div></div>
         </div>
       </div>
-      ${htags.length?`<div class="card-tags">${htags.map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
+      ${htags.length?`<div class="card-tags">${htags.filter(t=>t!=='treatment').slice(0,3).map(t=>`<span class="htag htag-${t}">${tagLabel(t)}</span>`).join('')}</div>`:''}
       ${cpp?`<div class="card-cpp cpp-${parseFloat(cpp)<0.20?'great':'ok'}">$${cpp}/g protein</div>`:''}
       <div class="card-foot">
         <span class="card-time">⏱ ${r.time}</span>
